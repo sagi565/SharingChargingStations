@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RentalHistoryActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="Rental History"
+            android:textSize="40dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtPricePerHour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Price Per Hour"
+            android:textSize="25sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/txtTotalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Total Price"
+            android:textSize="25sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/txtAmountTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Amount Of Time"
+            android:textSize="25sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/txtRenterName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Renter Name   "
+            android:textSize="25sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/txtStationAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Amount Of Time"
+            android:textSize="25sp"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
+            android:text="Back"
+            android:textSize="30sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
