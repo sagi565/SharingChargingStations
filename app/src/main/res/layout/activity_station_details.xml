@@ -12,80 +12,80 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtDetails"
+            android:id="@+id/tvDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="5dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Details"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txtRenterName"
+            android:id="@+id/tvRenterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Renter Name"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/txtPricePerHour"
+            android:id="@+id/tvPricePerHour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Price Per Hour"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/txtAvailableHours"
+            android:id="@+id/tvAvailableHour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
-            android:text="Available Hours "
-            android:textSize="25sp"
+            android:text="AvailableHour"
+            android:textSize="20sp"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/txtStationAddress"
+            android:id="@+id/tvStationAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Station  Address "
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/txtTypeStation"
+            android:id="@+id/tvTypeStation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Type of charging station "
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/txtChargingSpeed"
+            android:id="@+id/tvChargingSpeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Charging Speed "
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="normal" />
 
         <Button
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="0"
             android:text="Rent"

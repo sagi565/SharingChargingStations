@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,13 +41,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view =  getLayoutInflater().inflate(R.layout.item_charging_station,null);
-//                View view = super.getView(position, convertView, parent);
                 TextView tvItemAddress = view.findViewById(R.id.tvItemAddress);
                 TextView tvItemHours = view.findViewById(R.id.tvItemHours);
 
                 ChargingStation chargingStation = getItem(position);
                 tvItemAddress.setText(chargingStation.getStationAddress().toString());
-                tvItemHours.setText(chargingStation.getMinHour() + " - " + chargingStation.getMaxHour());
+                tvItemHours.setText(chargingStation.getTime());
 
                 return view;
             }
@@ -61,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                setFilter(s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                chargingStationArrayAdapter.getFilter().filter(s.toString());
+
             }
         });
         ivProfile = findViewById(R.id.ivProfile);
@@ -77,12 +78,25 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        lstStations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String str_pos = String.valueOf(position);
+                Intent i = new Intent(getApplicationContext(), StationDetailsActivity.class);
+                i.putExtra("pos", str_pos);
+
+                startActivity(i);
+            }
+        });
     }
     private void setFilter(String filter){
         filterChargingStations.clear();
         for(ChargingStation chargingStation : model.getChargingStations()){
-            if (chargingStation.getStationAddress().getCity().contains(filter)){
+            System.out.println("sagi" + chargingStation);
+            if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())){
                 filterChargingStations.add(chargingStation);
+
             }
         }
         chargingStationArrayAdapter.notifyDataSetChanged();
