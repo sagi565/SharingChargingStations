@@ -34,8 +34,15 @@ public class Model {
         chargingStations.add(new ChargingStation(15, 13, 15, new Address("Givat Shmuel", "Hazeitim", "1"), TypeChargingStation.BatteryEVs, 40));
         chargingStations.add(new ChargingStation(17, 12, 18, new Address("Givat Shmuel", "Hazeitim", "2"), TypeChargingStation.MostBatteryEVs, 60));
         chargingStations.add(new ChargingStation(9, 15, 19, new Address("Givat Shmuel", "Hazeitim", "3"), TypeChargingStation.BatteryEVs, 70));
+        chargingStations.add(new ChargingStation(12, 7, 3, new Address("Tel Aviv", "Ibn Gvirol", "26"), TypeChargingStation.MostBatteryEVs, 70));
+        chargingStations.add(new ChargingStation(8, 6, 8, new Address("Ramat Gan", "Jabotinsky", "65"), TypeChargingStation.PlugInHybrid, 30));
+
+
         users.add(new User("Sagi", chargingStations.get(0)));
         users.add(new User("Tamir", chargingStations.get(1)));
         users.add(new User("Yoav", chargingStations.get(2)));
+        users.add(new User("Yaniv", chargingStations.get(3)));
+        users.add(new User("Noa", chargingStations.get(4)));
+
     }
 }

@@ -3,17 +3,17 @@ package com.example.sharingchargingstations.Model;
 public class ChargingStation {
 
     private double pricePerHour;
-    private float minHour;
-    private float maxHour;
+    private float startHour;
+    private float endHour;
     private Address stationAddress;
     private TypeChargingStation type;
     private double ChargingSpeed;
 
-    public ChargingStation(double pricePerHour, float minHour, float maxHour, Address stationAddress, TypeChargingStation type, double chargingSpeed) {
+    public ChargingStation(double pricePerHour, float startHour, float endHour, Address stationAddress, TypeChargingStation type, double chargingSpeed) {
         this.pricePerHour = pricePerHour;
-        setMinHour(minHour);
-        setMaxHour(maxHour);
-        this.maxHour = maxHour;
+        setStartHour(startHour);
+        setEndHour(endHour);
+        this.endHour = endHour;
         this.stationAddress = stationAddress;
         this.type = type;
         ChargingSpeed = chargingSpeed;
@@ -28,19 +28,19 @@ public class ChargingStation {
     }
 
     public float getMinHour() {
-        return minHour;
+        return startHour;
     }
 
-    public void setMinHour(float minHour) { // אפשר רק חצאי שעות
-        this.minHour = minHour;
+    public void setStartHour(float minHour) { // אפשר רק חצאי שעות
+        this.startHour = minHour;
     }
 
     public float getMaxHour() {
-        return maxHour;
+        return endHour;
     }
 
-    public void setMaxHour(float maxHour) {
-        this.maxHour = maxHour;
+    public void setEndHour(float maxHour) {
+        this.endHour = maxHour;
     }
 
     public Address getStationAddress() {
@@ -67,19 +67,23 @@ public class ChargingStation {
         ChargingSpeed = chargingSpeed;
     }
 
-    /*public String floatToTime(float time){
-        return time;
-    }*/
+    public String getTime(){
+        return (String)((int)startHour + ":" + (int)((int)startHour - startHour) + "0" +  " - " + (int)endHour + ":" + (int)((int)endHour - endHour) + "0");
+
+    }
 
     @Override
     public String toString() {
         return "ChargingStation{" +
                 "pricePerHour=" + pricePerHour +
-                ", minHour=" + minHour +
-                ", maxHour=" + maxHour +
-                ", stationAddress=" + stationAddress +
+                ", startHour=" + startHour +
+                ", endHour=" + endHour +
+                ", stationAddress=" + stationAddress.toString() +
                 ", type=" + type +
                 ", ChargingSpeed=" + ChargingSpeed +
                 '}';
+    }
+    public String getProperties(){
+        return pricePerHour + " " + startHour + " " + endHour + " " + stationAddress.toString() + " " + type + " " + ChargingSpeed;
     }
 }
