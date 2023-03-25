@@ -11,14 +11,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Profile"
-            android:textSize="40dp"
-            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/ivProfile"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/ic_profile" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,7 +46,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/txtChargingStation"
+                android:id="@+id/tvChargingStation"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="100"
@@ -85,7 +84,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/txtCurrentRental"
+                android:id="@+id/tvCurrentRental"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="100"
@@ -109,22 +108,16 @@
 
         </LinearLayout>
 
-
-        <ListView
-            android:id="@+id/lstRentalHistory"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:filterTouchesWhenObscured="true" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
 
             <TextView
-                android:id="@+id/txtTotalRevenues"
+                android:id="@+id/tvTotalRevenues"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Total Revenues"
@@ -132,9 +125,9 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtTotalExpenses"
+                android:id="@+id/tvTotalExpenses"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Total Expenses"
@@ -142,6 +135,14 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+
+        <ListView
+            android:id="@+id/lvRentalsHistory"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:filterTouchesWhenObscured="true" />
+
+
 
     </LinearLayout>
 

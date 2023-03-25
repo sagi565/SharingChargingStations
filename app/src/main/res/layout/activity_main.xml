@@ -16,16 +16,17 @@
         <TextView
             android:id="@+id/txtFind"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="20"
             android:gravity="center"
             android:text="Find Charging Station"
             android:textSize="30sp"
             android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/ivProfile"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_margin="10dp"
             app:srcCompat="@drawable/ic_person" />
     </LinearLayout>

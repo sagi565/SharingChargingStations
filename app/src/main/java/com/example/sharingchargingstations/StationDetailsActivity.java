@@ -2,7 +2,9 @@ package com.example.sharingchargingstations;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,7 +29,6 @@ public class StationDetailsActivity extends AppCompatActivity {
     private User renter;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,7 @@ public class StationDetailsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
         Bundle extras = getIntent().getExtras();
-        int pos = Integer.parseInt(extras.getString("pos"));
+        int pos = extras.getInt("pos");
         chargingStation = Model.getInstance().getChargingStations().get(pos);
         renter = Model.getInstance().getUsers().get(pos);
 
@@ -54,6 +55,12 @@ public class StationDetailsActivity extends AppCompatActivity {
         tvTypeOfChargingStation.setText(chargingStation.getType().toString());
         tvChargingSpeed.setText(String.valueOf(chargingStation.getChargingSpeed()) + " Kilowatt-hour");
 
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
+        });
 
 
 

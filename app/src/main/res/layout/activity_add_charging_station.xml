@@ -26,42 +26,104 @@
             android:id="@+id/etPricePerHour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:hint="Price Per Hour"
-            android:inputType="text" />
-        <EditText
-            android:id="@+id/etAvailableHours"
+            android:inputType="text"
+            android:textSize="15sp" />
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:hint="Available Hours"
-            android:inputType="text" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:hint="Start Time"
+                android:id="@+id/et_start_time"
+                android:layout_below="@+id/in_date"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="50dp"
+                android:layout_alignParentStart="true" />
+
+            <Button
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="Start Time"
+                android:id="@+id/btn_start_time"
+                android:layout_below="@+id/btn_date"
+                android:layout_alignLeft="@+id/btn_date"
+                android:layout_alignStart="@+id/btn_date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:hint="End Time"
+                android:id="@+id/et_end_time"
+                android:layout_below="@+id/in_date"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="50dp"
+                android:layout_alignParentStart="true" />
+
+            <Button
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="End Time"
+                android:id="@+id/btn_end_time"
+                android:layout_below="@+id/btn_date"
+                android:layout_alignLeft="@+id/btn_date"
+                android:layout_alignStart="@+id/btn_date" />
+        </LinearLayout>
+
         <EditText
             android:id="@+id/etStationAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:hint="Station Address"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textSize="15sp" />
+
         <EditText
             android:id="@+id/etTypeChargingStation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:hint="Type Charging Station"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textSize="15sp" />
+
+        <Spinner
+            android:id="@+id/s_chargingType"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:layout_marginBottom="338dp"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <EditText
             android:id="@+id/etChargingSpeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:hint="Charging Speed"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textSize="15sp" />
+
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="40dp"
             android:text="Save"
             android:textSize="20sp" />
         <Button

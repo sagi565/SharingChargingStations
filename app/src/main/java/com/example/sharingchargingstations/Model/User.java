@@ -1,5 +1,7 @@
 package com.example.sharingchargingstations.Model;
 
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,13 +11,15 @@ public class User {
     private ChargingStation myChargingStation;
     private Rental currentRental;
     private List<Rental> HistoryRental;
+    private double totalRevenues;
+    private double totalExpeness;
 
-    public User(String name, ChargingStation myChargingStation) {
+    public User(String name, ChargingStation myChargingStation, double totalRevenues, double totalExpeness) {
         this.name = name;
         this.myChargingStation = myChargingStation;
-        HistoryRental = new ArrayList<>();
+        this.totalRevenues = totalRevenues;
+        this.totalExpeness = totalExpeness;
     }
-
 
     public String getName() {
         return name;
@@ -49,17 +53,20 @@ public class User {
         HistoryRental = historyRental;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(name, user.name) && Objects.equals(myChargingStation, user.myChargingStation) && Objects.equals(currentRental, user.currentRental) && Objects.equals(HistoryRental, user.HistoryRental);
+    public double getTotalRevenues() {
+        return totalRevenues;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, myChargingStation, currentRental, HistoryRental);
+    public void setTotalRevenues(double totalRevenues) {
+        this.totalRevenues = totalRevenues;
+    }
+
+    public double getTotalExpeness() {
+        return totalExpeness;
+    }
+
+    public void setTotalExpeness(double totalExpeness) {
+        this.totalExpeness = totalExpeness;
     }
 
     @Override
@@ -69,6 +76,8 @@ public class User {
                 ", myChargingStation=" + myChargingStation +
                 ", currentRental=" + currentRental +
                 ", HistoryRental=" + HistoryRental +
+                ", totalRevenues=" + totalRevenues +
+                ", totalExpeness=" + totalExpeness +
                 '}';
     }
 }

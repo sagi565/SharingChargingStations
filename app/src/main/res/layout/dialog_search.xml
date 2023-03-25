@@ -46,7 +46,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/etAvailableHours"
+        android:id="@+id/etStartHour"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"

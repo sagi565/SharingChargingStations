@@ -38,11 +38,21 @@ public class Model {
         chargingStations.add(new ChargingStation(8, 6, 8, new Address("Ramat Gan", "Jabotinsky", "65"), TypeChargingStation.PlugInHybrid, 30));
 
 
-        users.add(new User("Sagi", chargingStations.get(0)));
-        users.add(new User("Tamir", chargingStations.get(1)));
-        users.add(new User("Yoav", chargingStations.get(2)));
-        users.add(new User("Yaniv", chargingStations.get(3)));
-        users.add(new User("Noa", chargingStations.get(4)));
+        users.add(new User("Sagi", chargingStations.get(0), 15, 30));
+        users.add(new User("Tamir", chargingStations.get(1), 25, 20));
+        users.add(new User("Yoav", chargingStations.get(2), 45, 20));
+        users.add(new User("Yaniv", chargingStations.get(3), 35, 40));
+        users.add(new User("Noa", chargingStations.get(4), 35, 10));
 
+        currentUser = users.get(0);
+
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }

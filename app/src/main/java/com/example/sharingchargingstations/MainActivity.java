@@ -74,18 +74,17 @@ public class MainActivity extends AppCompatActivity {
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                 startActivity(intent);
             }
         });
         lstStations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                String str_pos = String.valueOf(position);
+                ChargingStation chargingStation = filterChargingStations.get(position);
+                int pos = model.getChargingStations().indexOf(chargingStation);
                 Intent i = new Intent(getApplicationContext(), StationDetailsActivity.class);
-                i.putExtra("pos", str_pos);
-
+                i.putExtra("pos", pos);
                 startActivity(i);
             }
         });
