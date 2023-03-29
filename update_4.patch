@@ -1,0 +1,31 @@
+Index: app/src/main/java/com/example/sharingchargingstations/Model/Model.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/sharingchargingstations/Model/Model.java	(revision f4398e330839758fa3856b1d114e1f8e1ccd367e)
++++ app/src/main/java/com/example/sharingchargingstations/Model/Model.java	(revision 4b84f9c902b28828e2ffd86e696dcbcc39d91429)
+@@ -45,7 +45,6 @@
+         users.add(new User("Noa", chargingStations.get(4), 35, 10));
+ 
+         currentUser = users.get(0);
+-        rentals.add()
+     }
+ 
+     public User getCurrentUser() {
+Index: app/src/main/java/com/example/sharingchargingstations/RentalsActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/sharingchargingstations/RentalsActivity.java	(revision f4398e330839758fa3856b1d114e1f8e1ccd367e)
++++ app/src/main/java/com/example/sharingchargingstations/RentalsActivity.java	(revision 4b84f9c902b28828e2ffd86e696dcbcc39d91429)
+@@ -44,7 +44,7 @@
+                 tvItemAddress.setText(rental.getHolderUser().getMyChargingStation().getStationAddress().toString());
+                 tvItemHours.setText(rental.getHolderUser().getMyChargingStation().getTime());
+                 tvItemMoney.setText((int) rental.getPrice());
+-                tvItemRenterUser.setText(rental);
++                tvItemRenterUser.setText(rental.getRenterUser().getName());
+ 
+                 return view;
+             }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view =  getLayoutInflater().inflate(R.layout.item_charging_station,null);
-                TextView tvItemAddress = view.findViewById(R.id.tvItemMoney);
+                TextView tvItemAddress = view.findViewById(R.id.tvItemAddress);
                 TextView tvItemHours = view.findViewById(R.id.tvItemHours);
 
                 ChargingStation chargingStation = getItem(position);
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 
     @Override
@@ -102,16 +105,13 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
     private void setFilter(String filter){
         filterChargingStations.clear();
         for(ChargingStation chargingStation : model.getChargingStations()){
             if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())){
                 filterChargingStations.add(chargingStation);
-
             }
         }
         chargingStationArrayAdapter.notifyDataSetChanged();
     }
-
 }

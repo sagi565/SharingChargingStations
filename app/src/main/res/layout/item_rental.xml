@@ -6,7 +6,7 @@
     android:padding="4dp">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/ivStatus"
         android:layout_width="65dp"
         android:layout_height="65dp"
         app:srcCompat="@drawable/ic_charging_station" />
@@ -36,6 +36,7 @@
                 android:id="@+id/tvItemHours"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
                 android:textSize="25sp"
@@ -52,13 +53,16 @@
                 android:id="@+id/tvItemMoney"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
                 android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/tvItemRenterUser"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
                 android:textSize="20sp" />

@@ -42,6 +42,43 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:text="City" />
+
+            <EditText
+                android:id="@+id/etStreet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:text="Street" />
+
+            <EditText
+                android:id="@+id/etHouseNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:text="House Number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:orientation="horizontal">
 
@@ -49,7 +86,7 @@
                 android:id="@+id/tvChargingStation"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="100"
+                android:layout_weight="5"
                 android:gravity="center"
                 android:text="Charging Station "
                 android:textSize="25sp" />
@@ -76,73 +113,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:text="Add Charging Station " />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvCurrentRental"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="100"
-                android:gravity="center"
-                android:text="My Current Rental"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/btnDeleteCurrentRental"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Delete" />
-
-            <Button
-                android:id="@+id/btnEditCurrentRental"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Edit" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp">
-
-            <TextView
-                android:id="@+id/tvTotalRevenues"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Total Revenues"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvTotalExpenses"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Total Expenses"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/lvRentalsHistory"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:filterTouchesWhenObscured="true" />
-
-
 
     </LinearLayout>
 

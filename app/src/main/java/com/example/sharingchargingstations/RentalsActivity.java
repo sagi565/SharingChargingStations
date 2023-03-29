@@ -4,17 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class RentalsActivity extends AppCompatActivity {
@@ -22,32 +24,64 @@ public class RentalsActivity extends AppCompatActivity {
     private Model model = Model.getInstance();
     private ListView lstRentals;
     private ArrayAdapter<Rental> rentalsArrayAdapter;
+    private TextView totalRevenues;
+    private TextView totalExpeness;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rentals);
         rentals = model.getRentals();
-        lstRentals = findViewById(R.id.lstStations);
+        lstRentals = findViewById(R.id.lvRentals);
+        totalRevenues = findViewById(R.id.tvTotalRevenues);
+        totalExpeness = findViewById(R.id.tvTotalExpenses);
+        totalRevenues.setText("Revenues: " + String.valueOf(model.getTotalRevenues()) + "₪");
+        totalExpeness.setText("Expenses: " + String.valueOf(model.getTotalExpenses()) + "₪");
 
         rentalsArrayAdapter = new ArrayAdapter<Rental>(this, R.layout.item_rental,rentals){
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view =  getLayoutInflater().inflate(R.layout.item_rental,null);
-                TextView tvItemAddress = view.findViewById(R.id.tvItemAddress);
+                TextView tvItemDate = view.findViewById(R.id.tvItemDate);
                 TextView tvItemHours = view.findViewById(R.id.tvItemHours);
                 TextView tvItemMoney = view.findViewById(R.id.tvItemMoney);
                 TextView tvItemRenterUser = view.findViewById(R.id.tvItemRenterUser);
-
+                ImageView imStatus = view.findViewById(R.id.ivStatus);
                 Rental rental = getItem(position);
-                tvItemAddress.setText(rental.getHolderUser().getMyChargingStation().getStationAddress().toString());
-                tvItemHours.setText(rental.getHolderUser().getMyChargingStation().getTime());
-                tvItemMoney.setText((int) rental.getPrice());
+
+                switch (rental.getStatus()){
+                    case panding:
+                        imStatus.setImageResource(R.drawable.ic_panding);
+                        break;
+                    case inRent:
+                        imStatus.setImageResource(R.drawable.ic_in_rent);
+                        break;
+                    case done:
+                        imStatus.setImageResource(R.drawable.ic_done);
+                        break;
+                    case canceled:
+                        imStatus.setImageResource(R.drawable.ic_canceled);
+                        break;
+                }
+                if(rental.getHolderUser() == model.getCurrentUser())
+                    view.setBackgroundColor(Color.rgb(208, 240, 192));
+                else
+                    view.setBackgroundColor(Color.rgb(135,206,235));
+
+
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                tvItemDate.setText(formatter.format(rental.getStartDate()));
+                tvItemHours.setText(rental.getTime());
+                tvItemMoney.setText(rental.getPrice() + "₪");
                 tvItemRenterUser.setText(rental.getRenterUser().getName());
 
                 return view;
             }
         };
+        lstRentals.setAdapter(rentalsArrayAdapter);
+
     }
 }

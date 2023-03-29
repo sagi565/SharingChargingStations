@@ -1,7 +1,5 @@
 package com.example.sharingchargingstations.Model;
 
-import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,17 +7,13 @@ import java.util.Objects;
 public class User {
     private String name;
     private ChargingStation myChargingStation;
-    //todo: add profile image ??
-//    private Rental currentRental;
-//    private List<Rental> HistoryRental;
-    private double totalRevenues;
-    private double totalExpeness;
+    private Rental currentRental;
+    private List<Rental> HistoryRental;
 
-    public User(String name, ChargingStation myChargingStation, double totalRevenues, double totalExpeness) {
+    public User(String name, ChargingStation myChargingStation) {
         this.name = name;
         this.myChargingStation = myChargingStation;
-        this.totalRevenues = totalRevenues;
-        this.totalExpeness = totalExpeness;
+        HistoryRental = new ArrayList<>();
     }
 
     public String getName() {
@@ -38,36 +32,33 @@ public class User {
         this.myChargingStation = myChargingStation;
     }
 
-//    public Rental getCurrentRental() {
-//        return currentRental;
-//    }
-//
-//    public void setCurrentRental(Rental currentRental) {
-//        this.currentRental = currentRental;
-//    }
-//
-//    public List<Rental> getHistoryRental() {
-//        return HistoryRental;
-//    }
-//
-//    public void setHistoryRental(List<Rental> historyRental) {
-//        HistoryRental = historyRental;
-//    }
-
-    public double getTotalRevenues() {
-        return totalRevenues;
+    public Rental getCurrentRental() {
+        return currentRental;
     }
 
-    public void setTotalRevenues(double totalRevenues) {
-        this.totalRevenues = totalRevenues;
+    public void setCurrentRental(Rental currentRental) {
+        this.currentRental = currentRental;
     }
 
-    public double getTotalExpeness() {
-        return totalExpeness;
+    public List<Rental> getHistoryRental() {
+        return HistoryRental;
     }
 
-    public void setTotalExpeness(double totalExpeness) {
-        this.totalExpeness = totalExpeness;
+    public void setHistoryRental(List<Rental> historyRental) {
+        HistoryRental = historyRental;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(name, user.name) && Objects.equals(myChargingStation, user.myChargingStation) && Objects.equals(currentRental, user.currentRental) && Objects.equals(HistoryRental, user.HistoryRental);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, myChargingStation, currentRental, HistoryRental);
     }
 
     @Override
@@ -75,10 +66,8 @@ public class User {
         return "User{" +
                 "name='" + name + '\'' +
                 ", myChargingStation=" + myChargingStation +
-                //", currentRental=" + currentRental +
-                //", HistoryRental=" + HistoryRental +
-                ", totalRevenues=" + totalRevenues +
-                ", totalExpeness=" + totalExpeness +
+                ", currentRental=" + currentRental +
+                ", HistoryRental=" + HistoryRental +
                 '}';
     }
 }
