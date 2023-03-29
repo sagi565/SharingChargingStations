@@ -4,17 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText etSearch;
     private ListView lstStations;
     private ArrayAdapter<ChargingStation> chargingStationArrayAdapter;
-    private ImageView ivProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view =  getLayoutInflater().inflate(R.layout.item_charging_station,null);
-                TextView tvItemAddress = view.findViewById(R.id.tvItemAddress);
+                TextView tvItemAddress = view.findViewById(R.id.tvItemMoney);
                 TextView tvItemHours = view.findViewById(R.id.tvItemHours);
 
                 ChargingStation chargingStation = getItem(position);
@@ -70,14 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ivProfile = findViewById(R.id.ivProfile);
-        ivProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                startActivity(intent);
-            }
-        });
         lstStations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -89,10 +80,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_user:
+                Intent intentProfile = new Intent(getApplicationContext(), ProfileActivity.class);
+                startActivity(intentProfile);
+                return true;
+            case R.id.action_rentals:
+                Intent intentRentals = new Intent(getApplicationContext(), RentalsActivity.class);
+                startActivity(intentRentals);
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setFilter(String filter){
         filterChargingStations.clear();
         for(ChargingStation chargingStation : model.getChargingStations()){
-            System.out.println("sagi" + chargingStation);
             if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())){
                 filterChargingStations.add(chargingStation);
 

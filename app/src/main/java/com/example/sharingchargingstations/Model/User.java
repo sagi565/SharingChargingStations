@@ -9,8 +9,9 @@ import java.util.Objects;
 public class User {
     private String name;
     private ChargingStation myChargingStation;
-    private Rental currentRental;
-    private List<Rental> HistoryRental;
+    //todo: add profile image ??
+//    private Rental currentRental;
+//    private List<Rental> HistoryRental;
     private double totalRevenues;
     private double totalExpeness;
 
@@ -37,21 +38,21 @@ public class User {
         this.myChargingStation = myChargingStation;
     }
 
-    public Rental getCurrentRental() {
-        return currentRental;
-    }
-
-    public void setCurrentRental(Rental currentRental) {
-        this.currentRental = currentRental;
-    }
-
-    public List<Rental> getHistoryRental() {
-        return HistoryRental;
-    }
-
-    public void setHistoryRental(List<Rental> historyRental) {
-        HistoryRental = historyRental;
-    }
+//    public Rental getCurrentRental() {
+//        return currentRental;
+//    }
+//
+//    public void setCurrentRental(Rental currentRental) {
+//        this.currentRental = currentRental;
+//    }
+//
+//    public List<Rental> getHistoryRental() {
+//        return HistoryRental;
+//    }
+//
+//    public void setHistoryRental(List<Rental> historyRental) {
+//        HistoryRental = historyRental;
+//    }
 
     public double getTotalRevenues() {
         return totalRevenues;
@@ -74,8 +75,8 @@ public class User {
         return "User{" +
                 "name='" + name + '\'' +
                 ", myChargingStation=" + myChargingStation +
-                ", currentRental=" + currentRental +
-                ", HistoryRental=" + HistoryRental +
+                //", currentRental=" + currentRental +
+                //", HistoryRental=" + HistoryRental +
                 ", totalRevenues=" + totalRevenues +
                 ", totalExpeness=" + totalExpeness +
                 '}';
