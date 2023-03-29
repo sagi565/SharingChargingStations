@@ -44,7 +44,7 @@ public class RentalsActivity extends AppCompatActivity {
                 tvItemAddress.setText(rental.getHolderUser().getMyChargingStation().getStationAddress().toString());
                 tvItemHours.setText(rental.getHolderUser().getMyChargingStation().getTime());
                 tvItemMoney.setText((int) rental.getPrice());
-                tvItemRenterUser.setText(rental);
+                tvItemRenterUser.setText(rental.getRenterUser().getName());
 
                 return view;
             }

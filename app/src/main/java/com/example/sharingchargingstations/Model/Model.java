@@ -45,7 +45,6 @@ public class Model {
         users.add(new User("Noa", chargingStations.get(4), 35, 10));
 
         currentUser = users.get(0);
-        rentals.add()
     }
 
     public User getCurrentUser() {
