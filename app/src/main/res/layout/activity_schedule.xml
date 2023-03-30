@@ -22,15 +22,17 @@
 
         <CalendarView
             android:id="@+id/cvDate"
-            android:layout_width="339dp"
-            android:layout_height="305dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
         <ListView
             android:id="@+id/lvHours"
             android:layout_width="match_parent"
-            android:layout_height="296dp"
-            android:filterTouchesWhenObscured="true" />
+            android:layout_height="wrap_content"
+            android:filterTouchesWhenObscured="true"
+            tools:listitem="@layout/item_hour"
+            android:layout_margin="8dp"/>
         <Button
             android:id="@+id/btnRent"
             android:layout_width="match_parent"

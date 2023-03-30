@@ -56,7 +56,7 @@ public class Model {
     }
 
     public void loadData(){
-        chargingStations.add(new ChargingStation(15, 13, 15, new Address("Givat Shmuel", "Hazeitim", "1"), TypeChargingStation.BatteryEVs, 40));
+        chargingStations.add(new ChargingStation(15, 13, 19, new Address("Givat Shmuel", "Hazeitim", "1"), TypeChargingStation.BatteryEVs, 40));
         chargingStations.add(new ChargingStation(17, 12, 18, new Address("Givat Shmuel", "Hazeitim", "2"), TypeChargingStation.MostBatteryEVs, 60));
         chargingStations.add(new ChargingStation(9, 15, 19, new Address("Givat Shmuel", "Hazeitim", "3"), TypeChargingStation.BatteryEVs, 70));
         chargingStations.add(new ChargingStation(12, 7, 3, new Address("Tel Aviv", "Ibn Gvirol", "26"), TypeChargingStation.MostBatteryEVs, 70));
@@ -80,7 +80,6 @@ public class Model {
         Date treeHourBack = cal.getTime();
 
         rentals.add(new Rental(currentUser, users.get(1), oneHourBack, Calendar.getInstance().getTime()));
-
         rentals.add(new Rental(currentUser, users.get(2), twoHourBack, Calendar.getInstance().getTime()));
         rentals.add(new Rental(currentUser, users.get(3), oneHourBack, Calendar.getInstance().getTime()));
         rentals.add(new Rental(users.get(3), currentUser, twoHourBack, Calendar.getInstance().getTime()));

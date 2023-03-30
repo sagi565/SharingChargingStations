@@ -27,7 +27,7 @@ public class StationDetailsActivity extends AppCompatActivity {
     private Model model = Model.getInstance();
     private ChargingStation chargingStation;
     private User renter;
-
+    private int pos;
 
 
     @Override
@@ -45,7 +45,7 @@ public class StationDetailsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
         Bundle extras = getIntent().getExtras();
-        int pos = extras.getInt("pos");
+        pos = extras.getInt("pos");
         chargingStation = Model.getInstance().getChargingStations().get(pos);
         renter = Model.getInstance().getUsers().get(pos);
 
@@ -58,11 +58,9 @@ public class StationDetailsActivity extends AppCompatActivity {
 
         btnRent.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-/*                ChargingStation chargingStation = filterChargingStations.get(position);
-                int pos = model.getChargingStations().indexOf(chargingStation);
-                Intent i = new Intent(getApplicationContext(), StationDetailsActivity.class);
+                Intent i = new Intent(getApplicationContext(), ScheduleActivity.class);
                 i.putExtra("pos", pos);
-                startActivity(i);*/
+                startActivity(i);
             }
         });
     }
