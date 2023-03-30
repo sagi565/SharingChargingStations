@@ -12,7 +12,8 @@
         android:text="13:00 - 14:00"
         android:textStyle="bold"
         android:gravity="left"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp">
     </TextView>
 
 </LinearLayout>

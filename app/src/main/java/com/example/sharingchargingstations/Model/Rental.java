@@ -67,11 +67,11 @@ public class Rental {
     }
 
     public String getTime(){
-        Calendar calendarStart = GregorianCalendar.getInstance();
+        Calendar calendarStart = Calendar.getInstance();
         calendarStart.setTime(startDate);
         double startHour = calendarStart.get(Calendar.HOUR_OF_DAY);
 
-        Calendar calendarEnd = GregorianCalendar.getInstance();
+        Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTime(endDate);
         double endHour = calendarEnd.get(Calendar.HOUR_OF_DAY);
 

@@ -10,29 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvSchedule"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="Schedule"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+
 
         <CalendarView
             android:id="@+id/cvDate"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="304dp"
             android:layout_gravity="center" />
 
         <ListView
             android:id="@+id/lvHours"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="221dp"
+            android:layout_margin="8dp"
             android:filterTouchesWhenObscured="true"
-            tools:listitem="@layout/item_hour"
-            android:layout_margin="8dp"/>
+            tools:listitem="@layout/item_hour" />
+
         <Button
             android:id="@+id/btnRent"
             android:layout_width="match_parent"
