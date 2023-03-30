@@ -95,7 +95,5 @@ public class Model {
             else
                 totalExpenses += r.getPrice();
         }
-
-
     }
 }
