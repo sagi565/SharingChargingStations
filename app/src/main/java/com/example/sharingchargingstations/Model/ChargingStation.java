@@ -9,7 +9,25 @@ public class ChargingStation {
     private TypeChargingStation type;
     private double ChargingSpeed;
 
-    public ChargingStation(double pricePerHour, float startHour, float endHour, Address stationAddress, TypeChargingStation type, double chargingSpeed) {
+    public float getStartHour() {
+        return startHour;
+    }
+
+    public float getEndHour() {
+        return endHour;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String description;
+
+    public ChargingStation(double pricePerHour, float startHour, float endHour, Address stationAddress, TypeChargingStation type, double chargingSpeed, String description) {
         this.pricePerHour = pricePerHour;
         setStartHour(startHour);
         setEndHour(endHour);
@@ -17,6 +35,7 @@ public class ChargingStation {
         this.stationAddress = stationAddress;
         this.type = type;
         ChargingSpeed = chargingSpeed;
+        this.description = description;
     }
 
     public double getPricePerHour() {
@@ -77,11 +96,13 @@ public class ChargingStation {
                 "pricePerHour=" + pricePerHour +
                 ", startHour=" + startHour +
                 ", endHour=" + endHour +
-                ", stationAddress=" + stationAddress.toString() +
+                ", stationAddress=" + stationAddress +
                 ", type=" + type +
                 ", ChargingSpeed=" + ChargingSpeed +
+                ", description='" + description + '\'' +
                 '}';
     }
+
     public String getProperties(){
         return pricePerHour + " " + startHour + " " + endHour + " " + stationAddress.toString() + " " + type + " " + ChargingSpeed;
     }

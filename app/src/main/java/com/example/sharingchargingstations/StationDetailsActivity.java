@@ -21,6 +21,8 @@ public class StationDetailsActivity extends AppCompatActivity {
     private TextView tvStationAddress;
     private TextView tvTypeOfChargingStation;
     private TextView tvChargingSpeed;
+    private TextView tvDescription;
+
     private Button btnRent;
     private Button btnBack;
 
@@ -41,6 +43,8 @@ public class StationDetailsActivity extends AppCompatActivity {
         tvStationAddress = findViewById(R.id.tvStationAddress);
         tvTypeOfChargingStation = findViewById(R.id.tvTypeStation);
         tvChargingSpeed = findViewById(R.id.tvChargingSpeed);
+        tvDescription = findViewById(R.id.tvDescription);
+
         btnRent = findViewById(R.id.btnRent);
         btnBack = findViewById(R.id.btnBack);
 
@@ -49,12 +53,13 @@ public class StationDetailsActivity extends AppCompatActivity {
         chargingStation = Model.getInstance().getChargingStations().get(pos);
         renter = Model.getInstance().getUsers().get(pos);
 
-        tvRenterName.setText(renter.getName());
+        tvRenterName.setText("Renter Name: " + renter.getName());
         tvPricePerHour.setText("Price Per Hour: " + String.valueOf(chargingStation.getPricePerHour()));
-        tvAvailableHour.setText(chargingStation.getTime());
-        tvStationAddress.setText(chargingStation.getStationAddress().toString());
-        tvTypeOfChargingStation.setText(chargingStation.getType().toString());
-        tvChargingSpeed.setText(String.valueOf(chargingStation.getChargingSpeed()) + " Kilowatt-hour");
+        tvAvailableHour.setText("Available Hours: " + chargingStation.getTime());
+        tvStationAddress.setText("Station Address: " + chargingStation.getStationAddress().toString());
+        tvTypeOfChargingStation.setText("Type Of Charging Station: " + chargingStation.getType().toString());
+        tvChargingSpeed.setText("Charging Speed: " + String.valueOf(chargingStation.getChargingSpeed()) + " Kilowatt-hour");
+        tvDescription.setText("Description: " + renter.getMyChargingStation().getDescription());
 
         btnRent.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
