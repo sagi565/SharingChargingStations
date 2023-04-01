@@ -13,53 +13,27 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtProfile"
+            android:id="@+id/tvRentalHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:gravity="center"
             android:text="Rental History"
             android:textSize="40dp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txtPricePerHour"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="Price Per Hour"
-            android:textSize="25sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:id="@+id/txtTotalPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="Total Price"
-            android:textSize="25sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:id="@+id/txtAmountTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="Amount Of Time"
-            android:textSize="25sp"
-            android:textStyle="normal" />
+        <ImageView
+            android:id="@+id/ivStatus"
+            android:layout_gravity="center"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            app:srcCompat="@drawable/ic_panding" />
 
         <TextView
             android:id="@+id/tvRenterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Renter Name   "
@@ -67,13 +41,46 @@
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/txtStationAddress"
+            android:id="@+id/tvTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
-            android:text="Amount Of Time"
+            android:text="Time"
+            android:textSize="25sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/tvStationAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Station Address"
+            android:textSize="25sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/tvPricePerHour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Price Per Hour"
+            android:textSize="25sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/tvTotalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Total Price"
             android:textSize="25sp"
             android:textStyle="normal" />
 
@@ -81,7 +88,7 @@
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="50dp"
             android:text="Back"
             android:textSize="30sp" />
     </LinearLayout>

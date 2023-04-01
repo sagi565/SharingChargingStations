@@ -63,6 +63,7 @@ public class StationDetailsActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 
 }

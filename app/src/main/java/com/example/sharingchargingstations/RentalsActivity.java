@@ -4,15 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
 
@@ -26,7 +29,8 @@ public class RentalsActivity extends AppCompatActivity {
     private ArrayAdapter<Rental> rentalsArrayAdapter;
     private TextView totalRevenues;
     private TextView totalExpeness;
-
+    private TextView tvItemDate;
+    private TextView tvItemHours;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +42,15 @@ public class RentalsActivity extends AppCompatActivity {
         totalRevenues.setText("Revenues: " + String.valueOf(model.getTotalRevenues()) + "₪");
         totalExpeness.setText("Expenses: " + String.valueOf(model.getTotalExpenses()) + "₪");
 
+
+
         rentalsArrayAdapter = new ArrayAdapter<Rental>(this, R.layout.item_rental,rentals){
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view =  getLayoutInflater().inflate(R.layout.item_rental,null);
-                TextView tvItemDate = view.findViewById(R.id.tvItemDate);
-                TextView tvItemHours = view.findViewById(R.id.tvItemHours);
+                tvItemDate = view.findViewById(R.id.tvItemDate);
+                tvItemHours = view.findViewById(R.id.tvItemHours);
                 TextView tvItemMoney = view.findViewById(R.id.tvItemMoney);
                 TextView tvItemRenterUser = view.findViewById(R.id.tvItemRenterUser);
                 ImageView imStatus = view.findViewById(R.id.ivStatus);
@@ -82,6 +88,18 @@ public class RentalsActivity extends AppCompatActivity {
             }
         };
         lstRentals.setAdapter(rentalsArrayAdapter);
+
+        lstRentals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Rental rental = rentals.get(position);
+                int pos = model.getRentals().indexOf(rental);
+                Intent i = new Intent(getApplicationContext(), RentalHistoryActivity.class);
+                i.putExtra("pos", pos);
+                i.putExtra("time", rental.getDate() + " | " + rental.getTime());
+                startActivity(i);
+            }
+        });
 
     }
 }

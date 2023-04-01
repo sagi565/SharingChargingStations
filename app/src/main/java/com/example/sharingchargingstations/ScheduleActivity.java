@@ -40,8 +40,8 @@ public class ScheduleActivity extends AppCompatActivity {
 
         simpleCalendarView = findViewById(R.id.cvDate);
         long selectedDate = simpleCalendarView.getDate();
-        simpleCalendarView.setDate(new Date().getTime());
-        simpleCalendarView.setFirstDayOfWeek(1);
+        //simpleCalendarView.setDate(new Date().getTime());
+        //simpleCalendarView.setFirstDayOfWeek(1);
 
 
         lvHours = findViewById(R.id.lvHours);
@@ -49,7 +49,7 @@ public class ScheduleActivity extends AppCompatActivity {
         simpleCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                setHoursList(year,month, dayOfMonth);
+                setHoursList(year,month + 1, dayOfMonth);
                 lvHours.setAdapter(hoursArrayAdapter);
 
             }
@@ -67,7 +67,8 @@ public class ScheduleActivity extends AppCompatActivity {
         };
         lvHours.setAdapter(hoursArrayAdapter);
         Date date = new Date();
-        setHoursList(date.getYear(), date.getMonth(), date.getDate());
+        date.setTime(date.getTime());
+        setHoursList(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
 
     }
 

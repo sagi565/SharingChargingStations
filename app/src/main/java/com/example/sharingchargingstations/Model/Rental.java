@@ -1,5 +1,6 @@
 package com.example.sharingchargingstations.Model;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,6 +65,11 @@ public class Rental {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getDate(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return formatter.format(startDate);
     }
 
     public String getTime(){
