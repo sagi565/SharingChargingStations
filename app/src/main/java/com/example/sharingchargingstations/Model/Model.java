@@ -59,11 +59,11 @@ public class Model {
     }
 
     public void loadData(){
-        chargingStations.add(new ChargingStation(15, 3, 22, new Address("Givat Shmuel", "Hazeitim", "1"), TypeChargingStation.BatteryEVs, 40));
-        chargingStations.add(new ChargingStation(17, 12, 18, new Address("Givat Shmuel", "Hazeitim", "2"), TypeChargingStation.MostBatteryEVs, 60));
-        chargingStations.add(new ChargingStation(9, 15, 19, new Address("Givat Shmuel", "Hazeitim", "3"), TypeChargingStation.BatteryEVs, 70));
-        chargingStations.add(new ChargingStation(12, 7, 13, new Address("Tel Aviv", "Ibn Gvirol", "26"), TypeChargingStation.MostBatteryEVs, 70));
-        chargingStations.add(new ChargingStation(8, 6, 8, new Address("Ramat Gan", "Jabotinsky", "65"), TypeChargingStation.PlugInHybrid, 30));
+        chargingStations.add(new ChargingStation(15, 3, 22, new Address("Givat Shmuel", "Hazeitim", "1"), TypeChargingStation.PP, 40));
+        chargingStations.add(new ChargingStation(17, 12, 18, new Address("Givat Shmuel", "Hazeitim", "2"), TypeChargingStation.CP, 60));
+        chargingStations.add(new ChargingStation(9, 15, 19, new Address("Givat Shmuel", "Hazeitim", "3"), TypeChargingStation.CCS2, 70));
+        chargingStations.add(new ChargingStation(12, 7, 13, new Address("Tel Aviv", "Ibn Gvirol", "26"), TypeChargingStation.CHAdeMO, 70));
+        chargingStations.add(new ChargingStation(8, 6, 8, new Address("Ramat Gan", "Jabotinsky", "65"), TypeChargingStation.CP, 30));
 
 
         users.add(new User("Sagi", chargingStations.get(0)));

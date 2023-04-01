@@ -6,7 +6,7 @@
     android:padding="4dp">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/ivChargingStation"
         android:layout_width="65dp"
         android:layout_height="65dp"
         app:srcCompat="@drawable/ic_charging_station" />
@@ -28,11 +28,21 @@
         <TextView
             android:id="@+id/tvItemAddress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="TextView"
             android:gravity="center"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvChargingType"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2.2"
+        android:gravity="center"
+        android:text="PP"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

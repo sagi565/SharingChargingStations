@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,10 +45,30 @@ public class MainActivity extends AppCompatActivity {
                 View view =  getLayoutInflater().inflate(R.layout.item_charging_station,null);
                 TextView tvItemAddress = view.findViewById(R.id.tvItemAddress);
                 TextView tvItemHours = view.findViewById(R.id.tvItemHours);
+                TextView tvItemType = view.findViewById(R.id.tvChargingType);
+                ImageView ivChargingStation = view.findViewById(R.id.ivChargingStation);
+
 
                 ChargingStation chargingStation = getItem(position);
+                tvItemType.setText(chargingStation.getType().toString());
                 tvItemAddress.setText(chargingStation.getStationAddress().toString());
                 tvItemHours.setText(chargingStation.getTime());
+
+                switch (tvItemType.getText().toString()){
+                    case "PP":
+                        ivChargingStation.setColorFilter(Color.rgb(147, 197, 114));
+                        break;
+                    case "CP":
+                        ivChargingStation.setColorFilter(Color.rgb(135,206,235));
+                        break;
+                    case "CCS2":
+                        ivChargingStation.setColorFilter(Color.rgb(240,128,128));
+                        break;
+                    case "CHAdeMO":
+                        ivChargingStation.setColorFilter(Color.rgb(255, 234, 0));
+                        tvItemType.setTextSize(15);
+                        break;
+                }
 
                 return view;
             }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ public class RentalsActivity extends AppCompatActivity {
     private TextView totalExpeness;
     private TextView tvItemDate;
     private TextView tvItemHours;
+    private Button btnBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,7 @@ public class RentalsActivity extends AppCompatActivity {
         totalExpeness = findViewById(R.id.tvTotalExpenses);
         totalRevenues.setText("Revenues: " + String.valueOf(model.getTotalRevenues()) + "₪");
         totalExpeness.setText("Expenses: " + String.valueOf(model.getTotalExpenses()) + "₪");
+        btnBack = findViewById(R.id.btnBack);
 
 
 
@@ -98,6 +102,12 @@ public class RentalsActivity extends AppCompatActivity {
                 i.putExtra("pos", pos);
                 i.putExtra("time", rental.getDate() + " | " + rental.getTime());
                 startActivity(i);
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
 
