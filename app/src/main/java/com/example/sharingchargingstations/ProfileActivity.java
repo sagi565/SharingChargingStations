@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.User;
@@ -122,6 +123,11 @@ public class ProfileActivity extends AppCompatActivity {
         tvMyChargingStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(etName.getText().toString() == "" || etCity.getText().toString() == "" || etStreet.getText().toString() == "" || etHouseNumber.getText().toString() == ""){
+                    Toast.makeText(ProfileActivity.this, "You need to fill in all the details", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 startActivity(new Intent(getApplicationContext(), AddChargingStationActivity.class));
             }
         });

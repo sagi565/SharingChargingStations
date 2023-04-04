@@ -21,10 +21,19 @@
             android:layout_marginTop="10dp"
             app:srcCompat="@drawable/ic_profile" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Name"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
             android:orientation="horizontal">
 
@@ -40,6 +49,16 @@
                 android:textSize="25sp" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/Address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Address"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,7 +112,6 @@
                 android:text="Charging Station "
                 android:textSize="30sp"
                 android:textStyle="bold"
-                android:onClick="onClick"
                 android:clickable="true"/>
 
             <ImageView
