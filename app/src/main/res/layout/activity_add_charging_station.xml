@@ -30,6 +30,7 @@
                 android:layout_width="68dp"
                 android:layout_height="43dp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_price" />
@@ -41,7 +42,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:hint="Price Per Hour"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal" />
         </LinearLayout>
 
 
@@ -55,6 +56,7 @@
                 android:id="@+id/ivStartTime"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_start_time" />
@@ -80,6 +82,7 @@
                 android:layout_width="71dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:rotation="180"
@@ -107,9 +110,10 @@
                 android:id="@+id/ivType"
                 android:layout_width="79dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ic_charging_station"
-                android:layout_marginRight="10dp" />
+                app:srcCompat="@drawable/ic_charging_station" />
 
             <Spinner
                 android:id="@+id/sType"
@@ -133,6 +137,7 @@
                 android:id="@+id/ivSpeed"
                 android:layout_width="78dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_speed" />
 
@@ -156,9 +161,9 @@
 
             <ImageView
                 android:id="@+id/imageView7"
-                android:layout_width="87dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_description" />
 
@@ -169,8 +174,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:hint="Description (Optional)"
-                android:maxLines="3"
-                android:maxLength="100"/>
+                android:maxLength="100"
+                android:maxLines="3" />
         </LinearLayout>
 
         <Button

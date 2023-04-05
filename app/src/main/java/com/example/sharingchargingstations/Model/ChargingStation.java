@@ -9,6 +9,16 @@ public class ChargingStation {
     private TypeChargingStation type;
     private double ChargingSpeed;
 
+    public ChargingStationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ChargingStationStatus status) {
+        this.status = status;
+    }
+
+    private ChargingStationStatus status;
+
     public float getStartHour() {
         return startHour;
     }
@@ -36,6 +46,7 @@ public class ChargingStation {
         this.type = type;
         ChargingSpeed = chargingSpeed;
         this.description = description;
+        status = ChargingStationStatus.active;
     }
 
     public double getPricePerHour() {
@@ -88,6 +99,12 @@ public class ChargingStation {
 
     public String getTime(){
         return (String)((int)startHour + ":" + (int)((int)startHour - startHour) + "0" +  " - " + (int)endHour + ":" + (int)((int)endHour - endHour) + "0");
+    }
+
+    public String getTime(float time){
+        if(time < 10)
+            return (String)("0" + (int)time + ":" + (int)((int)time - time) + "0");
+        return (String)((int)time + ":" + (int)((int)time - time) + "0");
     }
 
     @Override

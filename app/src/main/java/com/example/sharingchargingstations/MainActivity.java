@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.sharingchargingstations.Model.ChargingStation;
+import com.example.sharingchargingstations.Model.ChargingStationStatus;
 import com.example.sharingchargingstations.Model.Model;
 
 import java.util.ArrayList;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
                 TextView tvItemAddress = view.findViewById(R.id.tvItemAddress);
                 TextView tvItemHours = view.findViewById(R.id.tvItemHours);
                 TextView tvItemType = view.findViewById(R.id.tvChargingType);
+                TextView tvItemPrice = view.findViewById(R.id.tvItemPrice);
+
                 ImageView ivChargingStation = view.findViewById(R.id.ivChargingStation);
 
 
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 tvItemType.setText(chargingStation.getType().toString());
                 tvItemAddress.setText(chargingStation.getStationAddress().toString());
                 tvItemHours.setText(chargingStation.getTime());
+                tvItemPrice.setText(chargingStation.getPricePerHour() + "₪");
+
 
                 switch (tvItemType.getText().toString()){
                     case "PP":
@@ -66,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case "CHAdeMO":
                         ivChargingStation.setColorFilter(Color.rgb(255, 234, 0));
-                        tvItemType.setTextSize(15);
+
+                        tvItemType.setTextSize(14);
                         break;
                 }
 
@@ -129,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     private void setFilter(String filter){
         filterChargingStations.clear();
         for(ChargingStation chargingStation : model.getChargingStations()){
-            if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())){
+            if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase()) && chargingStation.getStatus() == ChargingStationStatus.active){
                 filterChargingStations.add(chargingStation);
             }
         }
