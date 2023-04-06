@@ -22,6 +22,8 @@ import com.example.sharingchargingstations.Model.Rental;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class RentalsActivity extends AppCompatActivity {
     private ArrayList<Rental> rentals = new ArrayList<>();
@@ -47,6 +49,7 @@ public class RentalsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
 
+        Collections.sort(rentals, Comparator.comparingLong(Rental::getDateInLong));
 
         rentalsArrayAdapter = new ArrayAdapter<Rental>(this, R.layout.item_rental,rentals){
             @NonNull
@@ -79,10 +82,7 @@ public class RentalsActivity extends AppCompatActivity {
                 else
                     view.setBackgroundColor(Color.rgb(135,206,235));
 
-
-
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
                 tvItemDate.setText(formatter.format(rental.getStartDate()));
                 tvItemHours.setText(rental.getTime());
                 tvItemMoney.setText(rental.getPrice() + "₪");

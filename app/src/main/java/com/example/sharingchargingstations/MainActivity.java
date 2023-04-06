@@ -135,7 +135,9 @@ public class MainActivity extends AppCompatActivity {
     private void setFilter(String filter){
         filterChargingStations.clear();
         for(ChargingStation chargingStation : model.getChargingStations()){
-            if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase()) && chargingStation.getStatus() == ChargingStationStatus.active){
+            if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())
+                    && chargingStation.getStatus() == ChargingStationStatus.active
+                    && chargingStation != model.getCurrentUser().getMyChargingStation()){
                 filterChargingStations.add(chargingStation);
             }
         }

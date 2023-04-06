@@ -71,7 +71,9 @@ public class Rental {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return formatter.format(startDate);
     }
-
+    public long getDateInLong(){
+        return startDate.getTime();
+    }
     public String getTime(){
         Calendar calendarStart = Calendar.getInstance();
         calendarStart.setTime(startDate);
