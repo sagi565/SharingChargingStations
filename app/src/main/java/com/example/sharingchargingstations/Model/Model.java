@@ -2,6 +2,15 @@ package com.example.sharingchargingstations.Model;
 
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,7 +31,7 @@ public class Model {
         return currentUser;
     }
 
-
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private User currentUser;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<ChargingStation> chargingStations = new ArrayList<>();
@@ -104,4 +113,50 @@ public class Model {
                 totalExpenses += r.getPrice();
         }
     }
+
+    public FirebaseUser getAuthUser(){
+        return mAuth.getCurrentUser();
+    }
+
+    public void login(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+//                        raiseUserLogin();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(context, "sign in failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+    public void createUser(String email, String password, String displayName) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+//                        raiseUserLogin();
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(displayName)
+                                .build();
+                        mAuth.getCurrentUser().updateProfile(profileUpdates);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(context, "Create user failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void signOut() {
+        mAuth.signOut();
+    }
+
 }

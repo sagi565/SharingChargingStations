@@ -5,21 +5,27 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.ChargingStationStatus;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showUserDialog();
         lstStations = findViewById(R.id.lstStations);
 
         chargingStationArrayAdapter = new ArrayAdapter<ChargingStation>(this, R.layout.item_charging_station,filterChargingStations){
@@ -142,5 +149,66 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         chargingStationArrayAdapter.notifyDataSetChanged();
+    }
+
+    private void showUserDialog(){
+        if (model.getAuthUser() == null){
+            Dialog userDialog = new Dialog(this);
+            userDialog.setContentView(R.layout.dialog_user);
+
+            userDialog.show();
+            Switch aSwitch = userDialog.findViewById(R.id.swtchState);
+            EditText etFullName = userDialog.findViewById(R.id.etDialogFullName);
+            EditText etEmail = userDialog.findViewById(R.id.etDialogEmail);
+            etEmail.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    String txt = editable.toString();
+                    if (Patterns.EMAIL_ADDRESS.matcher(txt).matches())
+                    {
+                        Toast.makeText(MainActivity.this, "Email is not valid", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            EditText etPassword = userDialog.findViewById(R.id.etDialogPassword);
+            etFullName.setVisibility(View.GONE);
+            Button btnSubmit = userDialog.findViewById(R.id.btnDialogDone);
+            aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    etFullName.setVisibility(b ? View.VISIBLE : View.GONE);
+                    btnSubmit.setText(b? "Create" : "Sign in");
+                }
+            });
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (aSwitch.isChecked()){
+                        model.createUser(etEmail.getText().toString(), etPassword.getText().toString(), etFullName.getText().toString());
+                    }
+                    else
+                    {
+                        model.login(etEmail.getText().toString(), etPassword.getText().toString());
+                    }
+                }
+            });
+//            ivDialogImage = userDialog.findViewById(R.id.ivDialogImage);
+//            ivDialogImage.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    openCamera();
+//                }
+//            });
+        }
     }
 }

@@ -115,6 +115,8 @@ public class ScheduleActivity extends AppCompatActivity {
                         orderHour.hourStatus = (i == position) ? HourStatus.selected : HourStatus.free;
                     }
                 }
+
+
                 Toast.makeText(ScheduleActivity.this, "" + hours.get(position).hourStatus, Toast.LENGTH_SHORT).show();
                 logHours();
                 hoursArrayAdapter.notifyDataSetChanged();
@@ -134,6 +136,13 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
 
+    private int getSelectedHour(){
+        for(OrderHour hour : hours){
+            if (hour.hourStatus == HourStatus.selected) return Integer.parseInt(hour.getContent().substring(0,2));
+        }
+
+        return -1;
+    }
     private void setHoursList(final int year, final int month, final int day) {
         final int dateYear = year - 1900; //Java date year is since 1900 (2023 is 123)
         final int dateMonth = year - 1900; //Java date year is since 1900 (2023 is 123)
@@ -155,7 +164,7 @@ public class ScheduleActivity extends AppCompatActivity {
                     })
                     .findAny()
                     .orElse(null);
-            String s = i + ":00 - " + (i+1) + ":00";
+            String s = String.format("%02d", i) + ":00 - " + (i+1) + ":00";
 
             String tmp = rental == null ? "" : "Occupied";
             if(rental == null)
@@ -173,13 +182,15 @@ public class ScheduleActivity extends AppCompatActivity {
     public void rent(){
         if(selectedHour == -1)
             return;
-        User holderUser = new User("", chargingStation);
+        User holderUser = null;
         for(User u : model.getUsers()){
             if(u.getMyChargingStation() == chargingStation)
                 holderUser = u;
         }
-
+        selectedHour = 13;
         Calendar calendar = Calendar.getInstance();
+        Date tmpDate = new Date(selectedYear, selectedMonth, selectedDay, selectedHour, 0);
+        Log.w(TAG, "rent: " + tmpDate);
         calendar.set(selectedYear, selectedMonth,selectedDay , selectedHour, 0, 0);
         Date startDate = calendar.getTime();
         calendar.add(Calendar.HOUR, 1);
