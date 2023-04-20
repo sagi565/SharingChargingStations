@@ -1,10 +1,13 @@
 package com.example.sharingchargingstations.Model;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class User {
+    private String documentId;
     private String name;
     private ChargingStation myChargingStation;
     private Rental currentRental;
@@ -15,6 +18,8 @@ public class User {
         this.myChargingStation = myChargingStation;
         HistoryRental = new ArrayList<>();
     }
+
+    public User(){}
 
     public String getName() {
         return name;
@@ -30,6 +35,14 @@ public class User {
 
     public void setMyChargingStation(ChargingStation myChargingStation) {
         this.myChargingStation = myChargingStation;
+    }
+    @Exclude
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 
     public Rental getCurrentRental() {

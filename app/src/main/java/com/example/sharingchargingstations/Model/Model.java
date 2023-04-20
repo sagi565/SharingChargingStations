@@ -3,6 +3,7 @@ package com.example.sharingchargingstations.Model;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -10,6 +11,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,9 +26,36 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Model {
+    private static final String TAG = "sharingchargingstations.Model";
+    public interface IModelUpdate{
+        public void userUpdate();
+        public void dataUpdate();
+
+    }
+
+    private IModelUpdate iModelUpdate = null;
+    public void registerModelUpdate(IModelUpdate iModelUpdate){
+        this.iModelUpdate = iModelUpdate;
+    }
     private static Model instance;
     private Model(){
+
         loadData();
+        regitsterDBRef();
+    }
+    private void regitsterDBRef(){
+        if (getAuthUser() != null) {
+            usersRef = db.collection("Users");
+            rentalsRef = db.collection("Rentals");
+            stationsRef = db.collection("Stations");
+            userRef = usersRef.document(getAuthUser().getUid());
+        }
+        else{
+            usersRef = null;
+            rentalsRef = null;
+            stationsRef = null;
+            userRef = null;
+        }
     }
     public static Model getInstance(){
         if(instance == null)
@@ -32,6 +68,11 @@ public class Model {
     }
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersRef;
+    private CollectionReference stationsRef;
+    private CollectionReference rentalsRef;
+    private DocumentReference userRef;
     private User currentUser;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<ChargingStation> chargingStations = new ArrayList<>();
@@ -40,7 +81,11 @@ public class Model {
     private double totalExpenses;
 
     public double getTotalRevenues() {
-        return totalRevenues;
+        double sum = 0;
+        for(Rental rental : rentals){
+            //rental.get
+        }
+        return sum;
     }
 
     public void setTotalRevenues(double totalRevenues) {
@@ -123,7 +168,7 @@ public class Model {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-//                        raiseUserLogin();
+                        raiseUserUpdate();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -145,6 +190,10 @@ public class Model {
                                 .setDisplayName(displayName)
                                 .build();
                         mAuth.getCurrentUser().updateProfile(profileUpdates);
+                        regitsterDBRef();
+                        User user = new User(displayName, null);
+                        user.setDocumentId(getAuthUser().getUid());
+                        addUser(user);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -157,6 +206,59 @@ public class Model {
 
     public void signOut() {
         mAuth.signOut();
+        regitsterDBRef();
+        raiseUserUpdate();
+    }
+    private void raiseUserUpdate(){
+        if (iModelUpdate != null) iModelUpdate.userUpdate();
+
     }
 
+    private void addUser(User user){
+        usersRef.document(user.getDocumentId()).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        raiseUserUpdate();
+                    }
+                });
+    }
+
+    private void updateUser(User user){
+        userRef.set(user);
+    }
+    private ListenerRegistration userListenerRegistration;
+    private void registerUserData(){
+
+        userListenerRegistration = usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                User user = null;
+                for(DocumentChange documentChange : value.getDocumentChanges()){
+                    user = documentChange.getDocument().toObject(User.class);
+                    switch (documentChange.getType()){
+                        case ADDED:
+
+                            user.setDocumentId(documentChange.getDocument().getId());
+                            users.add(user);
+                            break;
+                        case MODIFIED:
+                            String noteId = documentChange.getDocument().getId();
+                            User user1 = users.stream()
+                                    .filter(n -> n.getDocumentId().equals(noteId))
+                                    .findAny()
+                                    .orElse(null);
+                            if (user1 != null) {
+                                //update user fields
+                            }
+                        case REMOVED:
+                            users.remove(user);
+                            break;
+                    }
+                }
+                raiseUserUpdate();
+            }
+        });
+    }
 }

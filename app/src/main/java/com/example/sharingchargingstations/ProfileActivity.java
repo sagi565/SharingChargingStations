@@ -175,5 +175,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+    public void signOutClicked(View v){
+        model.signOut();
     }
 }

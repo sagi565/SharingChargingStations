@@ -156,7 +156,7 @@ public class AddChargingStationActivity extends AppCompatActivity {
             }
             model.getCurrentUser().setMyChargingStation(c);
             model.getCurrentUser().getMyChargingStation().setStatus(ChargingStationStatus.active);
-            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+            finish();
             }
         });
     }
