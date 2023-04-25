@@ -28,13 +28,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:hint="User Name" />
+        android:hint="email" />
 
     <EditText
         android:id="@+id/etDialogPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:inputType="textPassword"
         android:hint="Password" />
 
     <EditText
