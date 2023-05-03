@@ -1,10 +1,5 @@
 package com.example.sharingchargingstations;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,9 +22,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.ChargingStationStatus;
 import com.example.sharingchargingstations.Model.Model;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 
@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showUserDialog();
+        //showUserDialog();
         lstStations = findViewById(R.id.lstStations);
-
+        model.setContext(getApplicationContext());
         chargingStationArrayAdapter = new ArrayAdapter<ChargingStation>(this, R.layout.item_charging_station,filterChargingStations){
             @NonNull
             @Override
@@ -128,17 +128,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_user:
-                Intent intentProfile = new Intent(getApplicationContext(), ProfileActivity.class);
-                startActivity(intentProfile);
+                Intent intentProfile = new Intent(this, ProfileActivity.class);
+
+                startActivityForResult(intentProfile, 10);
                 return true;
             case R.id.action_rentals:
-                Intent intentRentals = new Intent(getApplicationContext(), RentalsActivity.class);
+                Intent intentRentals = new Intent(this, RentalsActivity.class);
                 startActivity(intentRentals);
                 return true;
 
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void setFilter(String filter){
         filterChargingStations.clear();
         for(ChargingStation chargingStation : model.getChargingStations()){
@@ -157,6 +159,10 @@ public class MainActivity extends AppCompatActivity {
             userDialog.setContentView(R.layout.dialog_user);
 
             userDialog.show();
+            int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+            int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+
+            userDialog.getWindow().setLayout(width, height);
             Switch aSwitch = userDialog.findViewById(R.id.swtchState);
             EditText etFullName = userDialog.findViewById(R.id.etDialogFullName);
             EditText etEmail = userDialog.findViewById(R.id.etDialogEmail);

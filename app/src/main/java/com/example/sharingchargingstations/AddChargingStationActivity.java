@@ -1,9 +1,6 @@
 package com.example.sharingchargingstations;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharingchargingstations.Model.Address;
 import com.example.sharingchargingstations.Model.ChargingStation;
@@ -22,7 +21,7 @@ import com.example.sharingchargingstations.Model.TypeChargingStation;
 import java.util.Locale;
 
 public class AddChargingStationActivity extends AppCompatActivity {
-
+    private boolean isUpdate = false;
     private EditText etPricePerHour;
     private EditText etStartTime;
     private EditText etEndTime;
@@ -50,7 +49,7 @@ public class AddChargingStationActivity extends AppCompatActivity {
         street = getIntent().getStringExtra("Street");
         houseNumber = getIntent().getStringExtra("HouseNumber");
 
-
+        isUpdate = model.getCurrentUser().getMyChargingStation() == null;
 
         sType = findViewById(R.id.sType);
         btnBack = findViewById(R.id.btnBack);
@@ -66,7 +65,7 @@ public class AddChargingStationActivity extends AppCompatActivity {
         sType.setAdapter(typesArrayAdapter);
         myChargingStation = model.getCurrentUser().getMyChargingStation();
 
-        if(model.getCurrentUser().getMyChargingStation().getStatus() == ChargingStationStatus.active){
+        if(myChargingStation != null && myChargingStation.getStatus() == ChargingStationStatus.active){
             etPricePerHour.setText(myChargingStation.getPricePerHour() + "₪");
             etStartTime.setText(myChargingStation.getTime(myChargingStation.getStartHour()));
             etEndTime.setText(myChargingStation.getTime(myChargingStation.getEndHour()));
@@ -78,7 +77,7 @@ public class AddChargingStationActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                finish();
             }
         });
 
@@ -119,13 +118,6 @@ public class AddChargingStationActivity extends AppCompatActivity {
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-            }
-        });
-
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,22 +132,28 @@ public class AddChargingStationActivity extends AppCompatActivity {
                 Toast.makeText(AddChargingStationActivity.this, "Start time is after end time", Toast.LENGTH_SHORT).show();
                 return;
             }
-            ChargingStation c = new ChargingStation(Double.parseDouble(etPricePerHour.getText().toString().replace('₪', ' ')),
-                    Float.parseFloat(etStartTime.getText().toString().substring(0, 2)),
-                    Float.parseFloat(etEndTime.getText().toString().substring(0, 2)),
-                    new Address(city, street, houseNumber),
-                    TypeChargingStation.valueOf(sType.getSelectedItem().toString()),
-                    Double.valueOf(etChargingSpeed.getText().toString()),
-                    etDescription.getText().toString());
-
-            for(int i = 0; i < model.getChargingStations().size(); i++){
-                if(model.getChargingStations().get(i) ==  model.getCurrentUser().getMyChargingStation()){
-                    model.getChargingStations().remove(i);
-                    model.getChargingStations().add(c);
-                }
+            float startHour = Float.parseFloat(etStartTime.getText().toString().substring(0, 2));
+            if (!isUpdate){
+                ChargingStation c = new ChargingStation(Double.parseDouble(etPricePerHour.getText().toString().replace('₪', ' ')),
+                        startHour,
+                        Float.parseFloat(etEndTime.getText().toString().substring(0, 2)),
+                        new Address(city, street, houseNumber),
+                        TypeChargingStation.valueOf(sType.getSelectedItem().toString()),
+                        Double.valueOf(etChargingSpeed.getText().toString()),
+                        etDescription.getText().toString());
+                model.addChargingStation(c);
             }
-            model.getCurrentUser().setMyChargingStation(c);
-            model.getCurrentUser().getMyChargingStation().setStatus(ChargingStationStatus.active);
+            else {
+                ChargingStation c = model.getCurrentUser().getMyChargingStation();
+                c.setStartHour(startHour);
+                model.updateChargingStation(c);
+                model.getCurrentUser().setMyChargingStation(c);
+            }
+
+
+
+
+
             finish();
             }
         });

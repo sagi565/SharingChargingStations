@@ -2,21 +2,14 @@ package com.example.sharingchargingstations.Model;
 
 import com.google.firebase.firestore.Exclude;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 public class User {
     private String documentId;
     private String name;
     private ChargingStation myChargingStation;
-    private Rental currentRental;
-    private List<Rental> HistoryRental;
 
     public User(String name, ChargingStation myChargingStation) {
         this.name = name;
         this.myChargingStation = myChargingStation;
-        HistoryRental = new ArrayList<>();
     }
 
     public User(){}
@@ -45,42 +38,4 @@ public class User {
         this.documentId = documentId;
     }
 
-    public Rental getCurrentRental() {
-        return currentRental;
-    }
-
-    public void setCurrentRental(Rental currentRental) {
-        this.currentRental = currentRental;
-    }
-
-    public List<Rental> getHistoryRental() {
-        return HistoryRental;
-    }
-
-    public void setHistoryRental(List<Rental> historyRental) {
-        HistoryRental = historyRental;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(name, user.name) && Objects.equals(myChargingStation, user.myChargingStation) && Objects.equals(currentRental, user.currentRental) && Objects.equals(HistoryRental, user.HistoryRental);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, myChargingStation, currentRental, HistoryRental);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", myChargingStation=" + myChargingStation +
-                ", currentRental=" + currentRental +
-                ", HistoryRental=" + HistoryRental +
-                '}';
-    }
 }

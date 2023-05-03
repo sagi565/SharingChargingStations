@@ -1,9 +1,8 @@
 package com.example.sharingchargingstations.Model;
 
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,38 +29,46 @@ import java.util.Date;
 
 public class Model {
     private static final String TAG = "sharingchargingstations.Model";
-    public interface IModelUpdate{
+
+    public interface IModelUpdate {
         public void userUpdate();
-        public void dataUpdate();
+
+        public void stationUpdate();
 
     }
 
     private IModelUpdate iModelUpdate = null;
-    public void registerModelUpdate(IModelUpdate iModelUpdate){
+
+    public void registerModelUpdate(IModelUpdate iModelUpdate) {
         this.iModelUpdate = iModelUpdate;
     }
+
     private static Model instance;
-    private Model(){
+
+    private Model() {
 
         loadData();
         regitsterDBRef();
     }
-    private void regitsterDBRef(){
+    private Context context;
+    private void regitsterDBRef() {
         if (getAuthUser() != null) {
             usersRef = db.collection("Users");
             rentalsRef = db.collection("Rentals");
             stationsRef = db.collection("Stations");
             userRef = usersRef.document(getAuthUser().getUid());
-        }
-        else{
+        } else {
             usersRef = null;
             rentalsRef = null;
             stationsRef = null;
             userRef = null;
         }
     }
-    public static Model getInstance(){
-        if(instance == null)
+    public void setContext(Context context){
+        this.context = context;
+    }
+    public static Model getInstance() {
+        if (instance == null)
             instance = new Model();
         return instance;
     }
@@ -82,7 +92,7 @@ public class Model {
 
     public double getTotalRevenues() {
         double sum = 0;
-        for(Rental rental : rentals){
+        for (Rental rental : rentals) {
             //rental.get
         }
         return sum;
@@ -112,7 +122,7 @@ public class Model {
         return rentals;
     }
 
-    public void loadData(){
+    public void loadData() {
         chargingStations.add(new ChargingStation(15, 3, 22, new Address("Givat Shmuel", "Hazeitim", "1"), TypeChargingStation.PP, 40, "Lovely charging station, very fast, no problems, on a quiet street."));
         chargingStations.add(new ChargingStation(17, 12, 18, new Address("Givat Shmuel", "Hazeitim", "2"), TypeChargingStation.CP, 60, "Lovely charging station, very fast, no problems, on a quiet street."));
         chargingStations.add(new ChargingStation(9, 15, 19, new Address("Givat Shmuel", "Hazeitim", "3"), TypeChargingStation.CCS2, 70, "Lovely charging station, very fast, no problems, on a quiet street."));
@@ -151,15 +161,17 @@ public class Model {
         totalRevenues = 0;
         totalExpenses = 0;
 
-        for(Rental r : rentals){
-            if(r.getHolderUser() == currentUser)
+        for (Rental r : rentals) {
+            if (r.getHolderUser() == currentUser)
                 totalRevenues += r.getPrice();
             else
                 totalExpenses += r.getPrice();
         }
+
+        //currentUser.getMyChargingStation().
     }
 
-    public FirebaseUser getAuthUser(){
+    public FirebaseUser getAuthUser() {
         return mAuth.getCurrentUser();
     }
 
@@ -199,6 +211,7 @@ public class Model {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: " + e.getMessage());
 //                        Toast.makeText(context, "Create user failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -209,12 +222,13 @@ public class Model {
         regitsterDBRef();
         raiseUserUpdate();
     }
-    private void raiseUserUpdate(){
+
+    private void raiseUserUpdate() {
         if (iModelUpdate != null) iModelUpdate.userUpdate();
 
     }
 
-    private void addUser(User user){
+    private void addUser(User user) {
         usersRef.document(user.getDocumentId()).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -224,20 +238,22 @@ public class Model {
                 });
     }
 
-    private void updateUser(User user){
+    private void updateUser(User user) {
         userRef.set(user);
     }
+
     private ListenerRegistration userListenerRegistration;
-    private void registerUserData(){
+
+    private void registerUserData() {
 
         userListenerRegistration = usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
                 User user = null;
-                for(DocumentChange documentChange : value.getDocumentChanges()){
+                for (DocumentChange documentChange : value.getDocumentChanges()) {
                     user = documentChange.getDocument().toObject(User.class);
-                    switch (documentChange.getType()){
+                    switch (documentChange.getType()) {
                         case ADDED:
 
                             user.setDocumentId(documentChange.getDocument().getId());
@@ -261,4 +277,78 @@ public class Model {
             }
         });
     }
+
+    public void addChargingStation(ChargingStation chargingStation) {
+        stationsRef.add(chargingStation)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        chargingStation.setDocumentId(documentReference.getId());
+//                        currentUser.setMyChargingStation(chargingStation);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+    private ListenerRegistration sationsListenerRegistration;
+    private void registerStationsData() {
+
+        userListenerRegistration = stationsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                ChargingStation station = null;
+                for (DocumentChange documentChange : value.getDocumentChanges()) {
+                    station = documentChange.getDocument().toObject(ChargingStation.class);
+                    switch (documentChange.getType()) {
+                        case ADDED:
+                            station.setDocumentId(documentChange.getDocument().getId());
+                            chargingStations.add(station);
+                            break;
+                        case MODIFIED:
+                            String docId = documentChange.getDocument().getId();
+                            ChargingStation localStation = chargingStations.stream()
+                                    .filter(n -> n.getDocumentId().equals(docId))
+                                    .findAny()
+                                    .orElse(null);
+                            if (localStation != null) {
+                                localStation.setPricePerHour(station.getPricePerHour());
+                                localStation.setStartHour(station.getStartHour());
+                                localStation.setEndHour(station.getEndHour());
+                                localStation.setStationAddress(station.getStationAddress());
+                                localStation.setType(station.getType());
+                                localStation.setChargingSpeed(station.getChargingSpeed());
+                            }
+                        case REMOVED:
+                            chargingStations.remove(station);
+                            break;
+                    }
+                }
+                raiseStationUpdate();
+            }
+        });
+    }
+
+    public void updateChargingStation(ChargingStation chargingStation){
+        stationsRef.document(chargingStation.getDocumentId()).set(chargingStation)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i(TAG, "onSuccess: ChargingStation update " + chargingStation.getDocumentId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.i(TAG, "onFailure:  ChargingStation update " + chargingStation.getDocumentId());
+                    }
+                });
+    }
+    private void raiseStationUpdate(){
+        if (iModelUpdate != null) iModelUpdate.stationUpdate();
+    }
+
 }

@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
 
@@ -52,9 +51,8 @@ public class RentalsActivity extends AppCompatActivity {
         Collections.sort(rentals, Comparator.comparingLong(Rental::getDateInLong));
 
         rentalsArrayAdapter = new ArrayAdapter<Rental>(this, R.layout.item_rental,rentals){
-            @NonNull
             @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            public View getView(int position, @Nullable View convertView, ViewGroup parent) {
                 View view =  getLayoutInflater().inflate(R.layout.item_rental,null);
                 tvItemDate = view.findViewById(R.id.tvItemDate);
                 tvItemHours = view.findViewById(R.id.tvItemHours);

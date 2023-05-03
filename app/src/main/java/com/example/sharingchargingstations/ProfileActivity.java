@@ -1,7 +1,5 @@
 package com.example.sharingchargingstations;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.ChargingStationStatus;
@@ -28,6 +28,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView tvMyChargingStation;
     private ImageView btnDeleteChargingStation;
     private Button btnBack;
+    private Button btnSignOut;
+
     private TextView tvItemAddress;
     private TextView tvItemHours;
     private TextView tvItemType;
@@ -78,6 +80,8 @@ public class ProfileActivity extends AppCompatActivity {
         etStreet.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getStreet());
         etHouseNumber.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getHouseNumber());
         btnBack = findViewById(R.id.btnBack);
+        btnSignOut = findViewById(R.id.btnSignOut);
+
 
         etName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -171,13 +175,15 @@ public class ProfileActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            }
+        });
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                model.signOut();
             }
         });
 
-
-    }
-    public void signOutClicked(View v){
-        model.signOut();
     }
 }

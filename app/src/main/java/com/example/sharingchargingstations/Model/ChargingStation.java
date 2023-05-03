@@ -8,6 +8,7 @@ public class ChargingStation {
     private Address stationAddress;
     private TypeChargingStation type;
     private double ChargingSpeed;
+    private String documentId;
 
     public ChargingStationStatus getStatus() {
         return status;
@@ -35,8 +36,12 @@ public class ChargingStation {
         this.description = description;
     }
 
-    private String description;
+    public String getDocumentId() {return documentId;}
 
+    public void setDocumentId(String documentId) {this.documentId = documentId;}
+
+    private String description;
+    public ChargingStation (){}
     public ChargingStation(double pricePerHour, float startHour, float endHour, Address stationAddress, TypeChargingStation type, double chargingSpeed, String description) {
         this.pricePerHour = pricePerHour;
         setStartHour(startHour);

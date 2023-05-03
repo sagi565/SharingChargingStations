@@ -24,7 +24,6 @@ import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
 import com.example.sharingchargingstations.Model.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,9 +84,8 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         });
         hoursArrayAdapter = new ArrayAdapter<OrderHour>(this, R.layout.item_hour, hours) {
-            @NonNull
             @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            public View getView(int position, @Nullable View convertView, ViewGroup parent) {
                 View view = getLayoutInflater().inflate(R.layout.item_hour, null);
                 OrderHour orderHour = hours.get(position);
                 Log.w(TAG, "getView: " + position + " " + orderHour.hourStatus);

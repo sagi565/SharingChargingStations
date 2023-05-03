@@ -9,9 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:padding="8dp"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/ivProfile"
@@ -32,24 +31,20 @@
             android:textSize="25sp"
             android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
+
 
             <EditText
                 android:id="@+id/etName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="30"
                 android:ems="10"
                 android:gravity="center"
                 android:hint="Name"
-                android:inputType="textPersonName"
+                android:inputType="text"
+                android:layout_marginBottom="20dp"
                 android:textSize="25sp" />
 
-        </LinearLayout>
+
 
         <TextView
             android:id="@+id/Address"
@@ -183,21 +178,31 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Back"
-            android:textSize="30sp" />
 
-        <Button
-            android:id="@+id/button"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="sign out"
-            android:textSize="30sp"
-            android:onClick="signOutClicked"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Back"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/btnSignOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="sign out"
+                android:textSize="30sp" />
+        </LinearLayout>
+
 
     </LinearLayout>
 
