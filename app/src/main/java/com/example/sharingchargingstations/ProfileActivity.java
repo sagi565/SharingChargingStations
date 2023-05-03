@@ -3,8 +3,6 @@ package com.example.sharingchargingstations;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +18,7 @@ import com.example.sharingchargingstations.Model.ChargingStationStatus;
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.User;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements Model.IModelUpdate {
     private EditText etName;
     private EditText etCity;
     private EditText etStreet;
@@ -58,13 +56,16 @@ public class ProfileActivity extends AppCompatActivity {
         llChargingStation = findViewById(R.id.llChargingStation);
 
         ChargingStation chargingStation = model.getCurrentUser().getMyChargingStation();
-        if(chargingStation.getStatus() == ChargingStationStatus.active){
+        if(chargingStation != null && chargingStation.getStatus() == ChargingStationStatus.active){
             tvItemType.setText(chargingStation.getType().toString());
             tvItemAddress.setText(chargingStation.getStationAddress().toString());
             tvItemHours.setText(chargingStation.getTime());
             tvItemPricePerHour.setText(chargingStation.getPricePerHour() + "₪");
             btnDeleteChargingStation.setColorFilter(Color.rgb(0,0,0));
             btnDeleteChargingStation.setEnabled(true);
+            etCity.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getCity());
+            etStreet.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getStreet());
+            etHouseNumber.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getHouseNumber());
         }
         else{
             tvItemType.setVisibility(View.GONE);
@@ -76,73 +77,12 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         etName.setText(model.getCurrentUser().getName());
-        etCity.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getCity());
-        etStreet.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getStreet());
-        etHouseNumber.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getHouseNumber());
+
         btnBack = findViewById(R.id.btnBack);
         btnSignOut = findViewById(R.id.btnSignOut);
 
 
-        etName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                model.getCurrentUser().setName(s.toString());
-            }
-        });
-        etCity.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                model.getCurrentUser().getMyChargingStation().getStationAddress().setCity(s.toString());
-            }
-        });
-        etStreet.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                model.getCurrentUser().getMyChargingStation().getStationAddress().setStreet(s.toString());
-            }
-        });
-        etHouseNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                model.getCurrentUser().getMyChargingStation().getStationAddress().setHouseNumber(s.toString());
-            }
-        });
 
         btnDeleteChargingStation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,8 +122,27 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 model.signOut();
+                finish();
             }
         });
+
+        model.registerModelUpdate(this);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        model.unRegisterModelUpdate(this);
+    }
+
+    @Override
+    public void userUpdate() {
+
+    }
+
+    @Override
+    public void stationUpdate() {
 
     }
 }

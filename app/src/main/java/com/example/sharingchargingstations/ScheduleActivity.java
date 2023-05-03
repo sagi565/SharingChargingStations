@@ -1,8 +1,7 @@
 package com.example.sharingchargingstations;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.annotation.NonNull;
+//import androidx.annotation.Nullable;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,10 +18,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
 import com.example.sharingchargingstations.Model.User;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -147,7 +150,7 @@ public class ScheduleActivity extends AppCompatActivity {
         Log.w(TAG, "setHoursList: ==================================="  );
         hours.clear();
         Rental rental;
-        for (int i = (int) chargingStation.getMinHour(); i < (int) chargingStation.getMaxHour(); i++) {
+        for (int i = (int) chargingStation.getMinHour(); i < (int) chargingStation.getEndHour(); i++) {
             final int hour = i;
             rental = model.getRentals().stream()
                     .filter(new Predicate<Rental>() {

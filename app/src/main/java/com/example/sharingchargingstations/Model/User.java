@@ -1,5 +1,6 @@
 package com.example.sharingchargingstations.Model;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Exclude;
 
 public class User {
@@ -13,6 +14,10 @@ public class User {
     }
 
     public User(){}
+    public User(FirebaseUser firebaseUser){
+        documentId = firebaseUser.getUid();
+        name = firebaseUser.getDisplayName();
+    }
 
     public String getName() {
         return name;

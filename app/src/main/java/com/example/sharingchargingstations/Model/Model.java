@@ -37,17 +37,21 @@ public class Model {
 
     }
 
-    private IModelUpdate iModelUpdate = null;
+    private  ArrayList<IModelUpdate> iModelUpdates = new ArrayList<>();
 
     public void registerModelUpdate(IModelUpdate iModelUpdate) {
-        this.iModelUpdate = iModelUpdate;
+        this.iModelUpdates.add(iModelUpdate);
+    }
+
+    public void unRegisterModelUpdate(IModelUpdate iModelUpdate){
+        if (iModelUpdates.contains(iModelUpdate)) iModelUpdates.remove(iModelUpdate);
     }
 
     private static Model instance;
 
     private Model() {
-
-        loadData();
+        if (mAuth.getCurrentUser() != null && currentUser == null) currentUser = new User(mAuth.getCurrentUser());
+//        loadData();
         regitsterDBRef();
     }
     private Context context;
@@ -57,11 +61,15 @@ public class Model {
             rentalsRef = db.collection("Rentals");
             stationsRef = db.collection("Stations");
             userRef = usersRef.document(getAuthUser().getUid());
+            registerUserData();
+            registerStationsData();
         } else {
             usersRef = null;
             rentalsRef = null;
             stationsRef = null;
             userRef = null;
+            userListenerRegistration.remove();
+            stationsListenerRegistration.remove();
         }
     }
     public void setContext(Context context){
@@ -180,12 +188,15 @@ public class Model {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+                        //set user
+                        currentUser = new User(getAuthUser());
                         raiseUserUpdate();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: login " + e.getMessage() );
 //                        Toast.makeText(context, "sign in failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -197,7 +208,6 @@ public class Model {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-//                        raiseUserLogin();
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(displayName)
                                 .build();
@@ -224,8 +234,9 @@ public class Model {
     }
 
     private void raiseUserUpdate() {
-        if (iModelUpdate != null) iModelUpdate.userUpdate();
-
+        for(IModelUpdate iModelUpdate : iModelUpdates){
+            iModelUpdate.userUpdate();
+        }
     }
 
     private void addUser(User user) {
@@ -245,11 +256,13 @@ public class Model {
     private ListenerRegistration userListenerRegistration;
 
     private void registerUserData() {
-
         userListenerRegistration = usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-
+                if (error != null){
+                    Log.e(TAG, "onEvent: users changed " + error.getMessage() );
+                    return;
+                }
                 User user = null;
                 for (DocumentChange documentChange : value.getDocumentChanges()) {
                     user = documentChange.getDocument().toObject(User.class);
@@ -283,8 +296,7 @@ public class Model {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        chargingStation.setDocumentId(documentReference.getId());
-//                        currentUser.setMyChargingStation(chargingStation);
+                        Log.i(TAG, "onSuccess: added charging station " + documentReference.getId());
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -293,20 +305,22 @@ public class Model {
             }
         });
     }
-    private ListenerRegistration sationsListenerRegistration;
+    private ListenerRegistration stationsListenerRegistration;
     private void registerStationsData() {
 
-        userListenerRegistration = stationsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        stationsListenerRegistration = stationsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
                 ChargingStation station = null;
                 for (DocumentChange documentChange : value.getDocumentChanges()) {
+
                     station = documentChange.getDocument().toObject(ChargingStation.class);
                     switch (documentChange.getType()) {
                         case ADDED:
                             station.setDocumentId(documentChange.getDocument().getId());
                             chargingStations.add(station);
+                            if (station.getUser().getDocumentId() == getAuthUser().getUid()) getCurrentUser().setMyChargingStation(station);
                             break;
                         case MODIFIED:
                             String docId = documentChange.getDocument().getId();
@@ -348,7 +362,9 @@ public class Model {
                 });
     }
     private void raiseStationUpdate(){
-        if (iModelUpdate != null) iModelUpdate.stationUpdate();
+        for(IModelUpdate update :iModelUpdates ){
+            update.stationUpdate();
+        }
     }
 
 }

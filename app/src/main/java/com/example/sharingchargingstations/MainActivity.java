@@ -43,9 +43,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //showUserDialog();
+        showUserDialog();
         lstStations = findViewById(R.id.lstStations);
         model.setContext(getApplicationContext());
+        model.registerModelUpdate(new Model.IModelUpdate() {
+            @Override
+            public void userUpdate() {
+                //when user in doing signout  we should show user dialog for sign in
+                showUserDialog();
+            }
+
+            @Override
+            public void stationUpdate() {
+                chargingStationArrayAdapter.notifyDataSetChanged();
+            }
+        });
         chargingStationArrayAdapter = new ArrayAdapter<ChargingStation>(this, R.layout.item_charging_station,filterChargingStations){
             @NonNull
             @Override
@@ -206,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         model.login(etEmail.getText().toString(), etPassword.getText().toString());
                     }
+                    userDialog.dismiss();
                 }
             });
 //            ivDialogImage = userDialog.findViewById(R.id.ivDialogImage);

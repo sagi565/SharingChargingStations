@@ -49,7 +49,7 @@ public class AddChargingStationActivity extends AppCompatActivity {
         street = getIntent().getStringExtra("Street");
         houseNumber = getIntent().getStringExtra("HouseNumber");
 
-        isUpdate = model.getCurrentUser().getMyChargingStation() == null;
+        isUpdate = model.getCurrentUser().getMyChargingStation() != null;
 
         sType = findViewById(R.id.sType);
         btnBack = findViewById(R.id.btnBack);
@@ -149,11 +149,6 @@ public class AddChargingStationActivity extends AppCompatActivity {
                 model.updateChargingStation(c);
                 model.getCurrentUser().setMyChargingStation(c);
             }
-
-
-
-
-
             finish();
             }
         });

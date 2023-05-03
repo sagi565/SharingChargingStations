@@ -1,5 +1,7 @@
 package com.example.sharingchargingstations.Model;
 
+import com.google.firebase.firestore.Exclude;
+
 public class ChargingStation {
 
     private double pricePerHour;
@@ -9,6 +11,7 @@ public class ChargingStation {
     private TypeChargingStation type;
     private double ChargingSpeed;
     private String documentId;
+    private User user;
 
     public ChargingStationStatus getStatus() {
         return status;
@@ -35,7 +38,7 @@ public class ChargingStation {
     public void setDescription(String description) {
         this.description = description;
     }
-
+    @Exclude
     public String getDocumentId() {return documentId;}
 
     public void setDocumentId(String documentId) {this.documentId = documentId;}
@@ -43,6 +46,7 @@ public class ChargingStation {
     private String description;
     public ChargingStation (){}
     public ChargingStation(double pricePerHour, float startHour, float endHour, Address stationAddress, TypeChargingStation type, double chargingSpeed, String description) {
+        this.user = Model.getInstance().getCurrentUser();
         this.pricePerHour = pricePerHour;
         setStartHour(startHour);
         setEndHour(endHour);
@@ -54,6 +58,7 @@ public class ChargingStation {
         status = ChargingStationStatus.active;
     }
 
+    public User getUser(){return user;}
     public double getPricePerHour() {
         return pricePerHour;
     }
@@ -70,12 +75,8 @@ public class ChargingStation {
         this.startHour = minHour;
     }
 
-    public float getMaxHour() {
-        return endHour;
-    }
-
-    public void setEndHour(float maxHour) {
-        this.endHour = maxHour;
+    public void setEndHour(float endHour) {
+        this.endHour = endHour;
     }
 
     public Address getStationAddress() {
@@ -101,11 +102,11 @@ public class ChargingStation {
     public void setChargingSpeed(double chargingSpeed) {
         ChargingSpeed = chargingSpeed;
     }
-
+    @Exclude
     public String getTime(){
         return (String)((int)startHour + ":" + (int)((int)startHour - startHour) + "0" +  " - " + (int)endHour + ":" + (int)((int)endHour - endHour) + "0");
     }
-
+    @Exclude
     public String getTime(float time){
         if(time < 10)
             return (String)("0" + (int)time + ":" + (int)((int)time - time) + "0");
@@ -124,7 +125,7 @@ public class ChargingStation {
                 ", description='" + description + '\'' +
                 '}';
     }
-
+    @Exclude
     public String getProperties(){
         return pricePerHour + " " + startHour + " " + endHour + " " + stationAddress.toString() + " " + type + " " + ChargingSpeed;
     }
