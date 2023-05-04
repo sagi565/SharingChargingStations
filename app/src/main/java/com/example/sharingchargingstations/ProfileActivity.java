@@ -158,4 +158,8 @@ public class ProfileActivity extends AppCompatActivity implements Model.IModelUp
     public void stationUpdate() {
 
     }
+    @Override
+    public void rentalUpdate() {
+
+    }
 }

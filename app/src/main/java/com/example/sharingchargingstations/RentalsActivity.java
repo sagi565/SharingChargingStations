@@ -1,9 +1,5 @@
 package com.example.sharingchargingstations;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,15 +12,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class RentalsActivity extends AppCompatActivity {
+public class RentalsActivity extends AppCompatActivity{
     private ArrayList<Rental> rentals = new ArrayList<>();
     private Model model = Model.getInstance();
     private ListView lstRentals;
@@ -108,6 +108,30 @@ public class RentalsActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
+        model.registerModelUpdate(new Model.IModelUpdate() {
+            @Override
+            public void userUpdate() {
+
+            }
+
+            @Override
+            public void stationUpdate() {
+
+            }
+            @Override
+            public void rentalUpdate() {
+                //setList();
+            }
+        });
+
 
     }
+    /*private void setList(){
+        for(Rental rental : model.getRentals()){
+            rentals.add(rental);
+        }
+        rentalsArrayAdapter.notifyDataSetChanged();
+    }*/
+
+
 }

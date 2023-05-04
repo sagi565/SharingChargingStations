@@ -1,6 +1,4 @@
 package com.example.sharingchargingstations.Model;
-
-
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,11 +28,12 @@ import java.util.Date;
 
 public class Model {
     private static final String TAG = "sharingchargingstations.Model";
+    private Context context;
 
     public interface IModelUpdate {
         public void userUpdate();
-
         public void stationUpdate();
+        public void rentalUpdate();
 
     }
 
@@ -52,11 +51,9 @@ public class Model {
 
     private Model() {
         if (mAuth.getCurrentUser() != null && currentUser == null) currentUser = new User(mAuth.getCurrentUser());
-//        loadData();
-        regitsterDBRef();
+        registerDBRef();
     }
-    private Context context;
-    private void regitsterDBRef() {
+    private void registerDBRef() {
         if (getAuthUser() != null) {
             usersRef = db.collection("Users");
             rentalsRef = db.collection("Rentals");
@@ -64,6 +61,8 @@ public class Model {
             userRef = usersRef.document(getAuthUser().getUid());
             registerUserData();
             registerStationsData();
+            registerRentalsData();
+
         } else {
             usersRef = null;
             rentalsRef = null;
@@ -73,6 +72,8 @@ public class Model {
                 userListenerRegistration.remove();
             if(stationsListenerRegistration != null)
                 stationsListenerRegistration.remove();
+            if(rentalsListenerRegistration != null)
+                rentalsListenerRegistration.remove();
         }
     }
     public void setContext(Context context){
@@ -108,31 +109,24 @@ public class Model {
         }
         return sum;
     }
-
     public void setTotalRevenues(double totalRevenues) {
         this.totalRevenues = totalRevenues;
     }
-
     public double getTotalExpenses() {
         return totalExpenses;
     }
-
     public void setTotalExpenses(double totalExpenses) {
         this.totalExpenses = totalExpenses;
     }
-
     public ArrayList<User> getUsers() {
         return users;
     }
-
     public ArrayList<ChargingStation> getChargingStations() {
         return chargingStations;
     }
-
     public ArrayList<Rental> getRentals() {
         return rentals;
     }
-
     public void loadData() {
         chargingStations.add(new ChargingStation(15, 3, 22, new Address("Givat Shmuel", "Hazeitim", "1"), TypeChargingStation.PP, 40, "Lovely charging station, very fast, no problems, on a quiet street."));
         chargingStations.add(new ChargingStation(17, 12, 18, new Address("Givat Shmuel", "Hazeitim", "2"), TypeChargingStation.CP, 60, "Lovely charging station, very fast, no problems, on a quiet street."));
@@ -163,11 +157,11 @@ public class Model {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
-        rentals.add(new Rental(currentUser, users.get(1), oneHourBack, Calendar.getInstance().getTime()));
-        rentals.add(new Rental(currentUser, users.get(2), twoHourBack, Calendar.getInstance().getTime()));
-        rentals.add(new Rental(currentUser, users.get(3), oneHourBack, Calendar.getInstance().getTime()));
-        rentals.add(new Rental(users.get(3), currentUser, twoHourBack, Calendar.getInstance().getTime()));
-        rentals.add(new Rental(users.get(2), currentUser, treeHourBack, Calendar.getInstance().getTime()));
+        rentals.add(new Rental(chargingStations.get(0), currentUser, users.get(1), oneHourBack, Calendar.getInstance().getTime()));
+        rentals.add(new Rental(chargingStations.get(1), currentUser, users.get(2), twoHourBack, Calendar.getInstance().getTime()));
+        rentals.add(new Rental(chargingStations.get(2), currentUser, users.get(3), oneHourBack, Calendar.getInstance().getTime()));
+        rentals.add(new Rental(chargingStations.get(3), users.get(3), currentUser, twoHourBack, Calendar.getInstance().getTime()));
+        rentals.add(new Rental(chargingStations.get(4), users.get(2), currentUser, treeHourBack, Calendar.getInstance().getTime()));
 
         totalRevenues = 0;
         totalExpenses = 0;
@@ -181,11 +175,9 @@ public class Model {
 
         //currentUser.getMyChargingStation().
     }
-
     public FirebaseUser getAuthUser() {
         return mAuth.getCurrentUser();
     }
-
     public void login(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -206,7 +198,6 @@ public class Model {
                 });
 
     }
-
     public void createUser(String email, String password, String displayName) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -216,7 +207,7 @@ public class Model {
                                 .setDisplayName(displayName)
                                 .build();
                         mAuth.getCurrentUser().updateProfile(profileUpdates);
-                        regitsterDBRef();
+                        registerDBRef();
                         User user = new User(displayName, null);
                         user.setDocumentId(getAuthUser().getUid());
                         addUser(user);
@@ -231,19 +222,21 @@ public class Model {
                     }
                 });
     }
-
     public void signOut() {
         mAuth.signOut();
-        regitsterDBRef();
+        registerDBRef();
         raiseUserUpdate();
     }
-
     private void raiseUserUpdate() {
         for(IModelUpdate iModelUpdate : iModelUpdates){
             iModelUpdate.userUpdate();
         }
     }
-
+    private void raiseRentalUpdate() {
+        for(IModelUpdate iModelUpdate : iModelUpdates){
+            iModelUpdate.rentalUpdate();
+        }
+    }
     private void addUser(User user) {
         usersRef.document(user.getDocumentId()).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -258,13 +251,24 @@ public class Model {
             }
         });
     }
+    public void addRental(Rental rental) {
+        rentalsRef.add(rental)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.i(TAG, "onSuccess: added rental " + documentReference.getId());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
 
+            }
+        });
+    }
     private void updateUser(User user) {
         userRef.set(user);
     }
-
     private ListenerRegistration userListenerRegistration;
-
     private void registerUserData() {
         userListenerRegistration = usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -300,7 +304,6 @@ public class Model {
             }
         });
     }
-
     public void addChargingStation(ChargingStation chargingStation) {
         stationsRef.add(chargingStation)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -355,7 +358,6 @@ public class Model {
             }
         });
     }
-
     public void updateChargingStation(ChargingStation chargingStation){
         stationsRef.document(chargingStation.getDocumentId()).set(chargingStation)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -371,10 +373,73 @@ public class Model {
                     }
                 });
     }
+
+
     private void raiseStationUpdate(){
         for(IModelUpdate update :iModelUpdates ){
             update.stationUpdate();
         }
     }
+    public void updateRental(Rental rental){
+        rentalsRef.document(rental.getDocumentId()).set(rental)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i(TAG, "onSuccess: rental update " + rental.getDocumentId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.i(TAG, "onFailure:  rental update " + rental.getDocumentId());
+                    }
+                });
+    }
+
+    private ListenerRegistration rentalsListenerRegistration;
+    private void registerRentalsData() {
+        rentalsListenerRegistration = rentalsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                Rental rental = null;
+                for (DocumentChange documentChange : value.getDocumentChanges()) {
+
+                    rental = documentChange.getDocument().toObject(Rental.class);
+                    switch (documentChange.getType()) {
+                        case ADDED:
+                            rental.setDocumentId(documentChange.getDocument().getId());
+                            rentals.add(rental);
+                            break;
+                        case MODIFIED:
+                            String docId = documentChange.getDocument().getId();
+                            Rental localRental = rentals.stream()
+                                    .filter(n -> n.getDocumentId().equals(docId))
+                                    .findAny()
+                                    .orElse(null);
+                            if (localRental != null) {
+                                localRental.setRenterUser(rental.getRenterUser());
+                                localRental.setHolderUser(rental.getHolderUser());
+                                localRental.setStartDate(rental.getStartDate());
+                                localRental.setEndDate(rental.getEndDate());
+                                localRental.setStatus(rental.getStatus());
+                            }
+                        case REMOVED:
+                            rentals.remove(rental);
+                            break;
+                    }
+                }
+                raiseRentalUpdate();
+            }
+        });
+    }
+
+    private void raiseRentalsUpdate(){
+        for(IModelUpdate update :iModelUpdates ){
+            update.rentalUpdate();
+        }
+    }
+
+
 
 }

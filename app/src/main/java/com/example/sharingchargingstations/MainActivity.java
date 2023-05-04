@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
                 setFilter(etSearch.getText().toString().trim());
                 chargingStationArrayAdapter.notifyDataSetChanged();
             }
+            @Override
+            public void rentalUpdate() {
+
+            }
         });
         chargingStationArrayAdapter = new ArrayAdapter<ChargingStation>(this, R.layout.item_charging_station,filterChargingStations){
             @NonNull

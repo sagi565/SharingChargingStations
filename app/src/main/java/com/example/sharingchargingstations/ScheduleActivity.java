@@ -197,8 +197,9 @@ public class ScheduleActivity extends AppCompatActivity {
         calendar.add(Calendar.HOUR, 1);
         Date endDate = calendar.getTime();
 
-        Rental newRental = new Rental(holderUser, model.getCurrentUser(), startDate, endDate);
+        Rental newRental = new Rental(chargingStation, holderUser, model.getCurrentUser(), startDate, endDate);
         model.getRentals().add(newRental);
+        model.addRental(newRental);
 
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);

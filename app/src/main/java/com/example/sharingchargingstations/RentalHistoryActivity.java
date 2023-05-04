@@ -1,7 +1,5 @@
 package com.example.sharingchargingstations;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,10 +8,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.sharingchargingstations.Model.ChargingStation;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
-import com.example.sharingchargingstations.Model.User;
 
 public class RentalHistoryActivity extends AppCompatActivity {
     private TextView tvTime;
@@ -63,8 +61,8 @@ public class RentalHistoryActivity extends AppCompatActivity {
                 ivStatus.setImageResource(R.drawable.ic_canceled);
                 break;
         }
-        tvStationAddress.setText(rental.getHolderUser().getMyChargingStation().getStationAddress().toString());
-        tvPricePerHour.setText("Price Per Hour: " + String.valueOf(rental.getHolderUser().getMyChargingStation().getPricePerHour()) + "₪");
+        tvStationAddress.setText(rental.getChargingStation().getStationAddress().toString());
+        tvPricePerHour.setText("Price Per Hour: " + String.valueOf(rental.getChargingStation().getPricePerHour()) + "₪");
         tvTotalPrice.setText("Total Price: " + String.valueOf(rental.getPrice()) + "₪");
 
         if(rental.getHolderUser() == model.getCurrentUser()){
@@ -72,7 +70,7 @@ public class RentalHistoryActivity extends AppCompatActivity {
             tvTotalPrice.setTextColor(Color.rgb(50,205,50)); // green
         }
         else{
-            tvPeopleName.setText("Owner: " + rental.getHolderUser().getName() + "  -  Renter: You");
+            tvPeopleName.setText("Owner: " + model.getCurrentUser().getName() + "  -  Renter: You");
             tvTotalPrice.setTextColor(Color.rgb(30,144,255)); // blue
         }
 

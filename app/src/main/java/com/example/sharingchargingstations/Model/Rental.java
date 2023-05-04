@@ -1,29 +1,34 @@
 package com.example.sharingchargingstations.Model;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Objects;
 
 public class Rental {
+    private String documentId;
+
     private User holderUser;
     private User renterUser;
     private Date startDate;
     private Date endDate;
+    private ChargingStation chargingStation;
+
+
 
     private double price;
     private RentalStatus status; //panding, inRent, done, canceled;
-
-    public Rental(User holderUser, User renterUser, Date startDate, Date endDate) {
+    public Rental(){}
+    public Rental(ChargingStation chargingStation, User holderUser, User renterUser, Date startDate, Date endDate) {
         this.holderUser = holderUser;
         this.renterUser = renterUser;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.chargingStation = chargingStation;
         long secs = (this.endDate.getTime() - this.startDate.getTime()) / 1000;
         double hours = secs / 3600;
-        price = holderUser.getMyChargingStation().getPricePerHour() * hours;
+        price = chargingStation.getPricePerHour() * hours;
         status = RentalStatus.panding;
     }
     public RentalStatus getStatus() {
@@ -85,6 +90,24 @@ public class Rental {
 
         return (String)((int)startHour + ":" + (int)((int)startHour - startHour) + "0" +  " - " + (int)endHour + ":" + (int)((int)endHour - endHour) + "0");
     }
+
+    public ChargingStation getChargingStation() {
+        return chargingStation;
+    }
+
+    public void setChargingStation(ChargingStation chargingStation) {
+        this.chargingStation = chargingStation;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Exclude
+    public String getDocumentId() {return documentId;}
+
+    public void setDocumentId(String documentId) {this.documentId = documentId;}
+
 
 
 }
