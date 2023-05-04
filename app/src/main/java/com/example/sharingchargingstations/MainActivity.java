@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void stationUpdate() {
+                setFilter(etSearch.getText().toString().trim());
                 chargingStationArrayAdapter.notifyDataSetChanged();
             }
         });

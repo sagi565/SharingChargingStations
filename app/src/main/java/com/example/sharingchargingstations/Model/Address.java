@@ -5,6 +5,7 @@ public class Address {
     private String street;
     private String houseNumber;
 
+    public Address(){ }
     public Address(String city, String street, String houseNumber) {
         this.city = city;
         this.street = street;

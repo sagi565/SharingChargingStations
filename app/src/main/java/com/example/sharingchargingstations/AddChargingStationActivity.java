@@ -70,7 +70,7 @@ public class AddChargingStationActivity extends AppCompatActivity {
             etStartTime.setText(myChargingStation.getTime(myChargingStation.getStartHour()));
             etEndTime.setText(myChargingStation.getTime(myChargingStation.getEndHour()));
             sType.setSelection(typesArrayAdapter.getPosition(myChargingStation.getType().toString()));
-            etChargingSpeed.setText(String.valueOf(myChargingStation.getPricePerHour()));
+            etChargingSpeed.setText(String.valueOf(myChargingStation.getChargingSpeed()));
             etDescription.setText(myChargingStation.getDescription());
         }
 
@@ -133,10 +133,12 @@ public class AddChargingStationActivity extends AppCompatActivity {
                 return;
             }
             float startHour = Float.parseFloat(etStartTime.getText().toString().substring(0, 2));
+            float endHour = Float.parseFloat(etEndTime.getText().toString().substring(0, 2));
+            double pricePerHour = Double.parseDouble(etPricePerHour.getText().toString().replace('₪', ' '));
             if (!isUpdate){
-                ChargingStation c = new ChargingStation(Double.parseDouble(etPricePerHour.getText().toString().replace('₪', ' ')),
+                ChargingStation c = new ChargingStation(pricePerHour,
                         startHour,
-                        Float.parseFloat(etEndTime.getText().toString().substring(0, 2)),
+                        endHour,
                         new Address(city, street, houseNumber),
                         TypeChargingStation.valueOf(sType.getSelectedItem().toString()),
                         Double.valueOf(etChargingSpeed.getText().toString()),
@@ -145,10 +147,19 @@ public class AddChargingStationActivity extends AppCompatActivity {
             }
             else {
                 ChargingStation c = model.getCurrentUser().getMyChargingStation();
+                c.setPricePerHour(pricePerHour);
                 c.setStartHour(startHour);
+                c.setEndHour(endHour);
+                c.getStationAddress().setCity(city);
+                c.getStationAddress().setStreet(street);
+                c.getStationAddress().setHouseNumber(houseNumber);
+                c.setType(TypeChargingStation.valueOf(sType.getSelectedItem().toString()));
+                c.setChargingSpeed(Double.valueOf(etChargingSpeed.getText().toString()));
+                c.setDescription(etDescription.getText().toString());
                 model.updateChargingStation(c);
                 model.getCurrentUser().setMyChargingStation(c);
             }
+            setResult(RESULT_OK);
             finish();
             }
         });

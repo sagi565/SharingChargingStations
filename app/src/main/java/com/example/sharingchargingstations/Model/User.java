@@ -1,7 +1,6 @@
 package com.example.sharingchargingstations.Model;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.Exclude;
 
 public class User {
     private String documentId;
@@ -34,7 +33,7 @@ public class User {
     public void setMyChargingStation(ChargingStation myChargingStation) {
         this.myChargingStation = myChargingStation;
     }
-    @Exclude
+
     public String getDocumentId() {
         return documentId;
     }

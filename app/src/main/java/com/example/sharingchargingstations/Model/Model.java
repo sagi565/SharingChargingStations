@@ -3,6 +3,7 @@ package com.example.sharingchargingstations.Model;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,8 +69,10 @@ public class Model {
             rentalsRef = null;
             stationsRef = null;
             userRef = null;
-            userListenerRegistration.remove();
-            stationsListenerRegistration.remove();
+            if(userListenerRegistration != null)
+                userListenerRegistration.remove();
+            if(stationsListenerRegistration != null)
+                stationsListenerRegistration.remove();
         }
     }
     public void setContext(Context context){
@@ -197,7 +200,8 @@ public class Model {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "onFailure: login " + e.getMessage() );
-//                        Toast.makeText(context, "sign in failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "sign in failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        raiseUserUpdate();
                     }
                 });
 
@@ -222,7 +226,8 @@ public class Model {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "onFailure: " + e.getMessage());
-//                        Toast.makeText(context, "Create user failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Create user failed " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        raiseUserUpdate();
                     }
                 });
     }
@@ -246,7 +251,12 @@ public class Model {
                     public void onSuccess(Void unused) {
                         raiseUserUpdate();
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(context, "Add User Failed " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void updateUser(User user) {
@@ -320,7 +330,7 @@ public class Model {
                         case ADDED:
                             station.setDocumentId(documentChange.getDocument().getId());
                             chargingStations.add(station);
-                            if (station.getUser().getDocumentId() == getAuthUser().getUid()) getCurrentUser().setMyChargingStation(station);
+                            if (station.getUser().getDocumentId().equals(getAuthUser().getUid())) getCurrentUser().setMyChargingStation(station);
                             break;
                         case MODIFIED:
                             String docId = documentChange.getDocument().getId();

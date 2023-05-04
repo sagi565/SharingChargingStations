@@ -12,6 +12,21 @@ public class ChargingStation {
     private double ChargingSpeed;
     private String documentId;
     private User user;
+    private String description;
+
+    public ChargingStation (){}
+    public ChargingStation(double pricePerHour, float startHour, float endHour, Address stationAddress, TypeChargingStation type, double chargingSpeed, String description) {
+        this.user = Model.getInstance().getCurrentUser();
+        this.pricePerHour = pricePerHour;
+        setStartHour(startHour);
+        setEndHour(endHour);
+        this.endHour = endHour;
+        this.stationAddress = stationAddress;
+        this.type = type;
+        ChargingSpeed = chargingSpeed;
+        this.description = description;
+        status = ChargingStationStatus.active;
+    }
 
     public ChargingStationStatus getStatus() {
         return status;
@@ -43,20 +58,8 @@ public class ChargingStation {
 
     public void setDocumentId(String documentId) {this.documentId = documentId;}
 
-    private String description;
-    public ChargingStation (){}
-    public ChargingStation(double pricePerHour, float startHour, float endHour, Address stationAddress, TypeChargingStation type, double chargingSpeed, String description) {
-        this.user = Model.getInstance().getCurrentUser();
-        this.pricePerHour = pricePerHour;
-        setStartHour(startHour);
-        setEndHour(endHour);
-        this.endHour = endHour;
-        this.stationAddress = stationAddress;
-        this.type = type;
-        ChargingSpeed = chargingSpeed;
-        this.description = description;
-        status = ChargingStationStatus.active;
-    }
+
+
 
     public User getUser(){return user;}
     public double getPricePerHour() {

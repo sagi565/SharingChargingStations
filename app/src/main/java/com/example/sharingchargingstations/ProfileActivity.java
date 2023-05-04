@@ -36,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity implements Model.IModelUp
 
     private Model model = Model.getInstance();
     private User currentUser = model.getCurrentUser();
+    private ChargingStation chargingStation;
 
 
     @Override
@@ -55,17 +56,9 @@ public class ProfileActivity extends AppCompatActivity implements Model.IModelUp
         btnDeleteChargingStation = findViewById(R.id.iv_trash);
         llChargingStation = findViewById(R.id.llChargingStation);
 
-        ChargingStation chargingStation = model.getCurrentUser().getMyChargingStation();
+        chargingStation = model.getCurrentUser().getMyChargingStation();
         if(chargingStation != null && chargingStation.getStatus() == ChargingStationStatus.active){
-            tvItemType.setText(chargingStation.getType().toString());
-            tvItemAddress.setText(chargingStation.getStationAddress().toString());
-            tvItemHours.setText(chargingStation.getTime());
-            tvItemPricePerHour.setText(chargingStation.getPricePerHour() + "₪");
-            btnDeleteChargingStation.setColorFilter(Color.rgb(0,0,0));
-            btnDeleteChargingStation.setEnabled(true);
-            etCity.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getCity());
-            etStreet.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getStreet());
-            etHouseNumber.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getHouseNumber());
+            updateUiFields();
         }
         else{
             tvItemType.setVisibility(View.GONE);
@@ -107,9 +100,11 @@ public class ProfileActivity extends AppCompatActivity implements Model.IModelUp
                 i.putExtra("City", etCity.getText().toString());
                 i.putExtra("Street", etStreet.getText().toString());
                 i.putExtra("HouseNumber", etHouseNumber.getText().toString());
-                startActivity(i);
+                startActivityForResult(i,1);
             }
         });
+
+
 
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +123,24 @@ public class ProfileActivity extends AppCompatActivity implements Model.IModelUp
 
         model.registerModelUpdate(this);
 
+    }
+
+    private void updateUiFields(){
+        tvItemType.setText(chargingStation.getType().toString());
+        tvItemAddress.setText(chargingStation.getStationAddress().toString());
+        tvItemHours.setText(chargingStation.getTime());
+        tvItemPricePerHour.setText(chargingStation.getPricePerHour() + "₪");
+        btnDeleteChargingStation.setColorFilter(Color.rgb(0,0,0));
+        btnDeleteChargingStation.setEnabled(true);
+        etCity.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getCity());
+        etStreet.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getStreet());
+        etHouseNumber.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getHouseNumber());
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK)
+            updateUiFields();
     }
 
     @Override

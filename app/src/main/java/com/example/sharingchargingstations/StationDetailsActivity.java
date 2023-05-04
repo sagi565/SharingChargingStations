@@ -1,13 +1,12 @@
 package com.example.sharingchargingstations;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.Model;
@@ -28,7 +27,7 @@ public class StationDetailsActivity extends AppCompatActivity {
 
     private Model model = Model.getInstance();
     private ChargingStation chargingStation;
-    private User renter;
+    private User user;
     private int pos;
 
 
@@ -51,15 +50,15 @@ public class StationDetailsActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         pos = extras.getInt("pos");
         chargingStation = Model.getInstance().getChargingStations().get(pos);
-        renter = Model.getInstance().getUsers().get(pos);
+        user = chargingStation.getUser();
 
-        tvRenterName.setText("Renter Name: " + renter.getName());
+        tvRenterName.setText("Renter Name: " + user.getName());
         tvPricePerHour.setText("Price Per Hour: " + String.valueOf(chargingStation.getPricePerHour()));
         tvAvailableHour.setText("Available Hours: " + chargingStation.getTime());
         tvStationAddress.setText("Station Address: " + chargingStation.getStationAddress().toString());
         tvTypeOfChargingStation.setText("Type Of Charging Station: " + chargingStation.getType().toString());
         tvChargingSpeed.setText("Charging Speed: " + String.valueOf(chargingStation.getChargingSpeed()) + " Kilowatt-hour");
-        tvDescription.setText("Description: " + renter.getMyChargingStation().getDescription());
+        tvDescription.setText("Description: " + chargingStation.getDescription());
 
         btnRent.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
