@@ -34,12 +34,14 @@ public class Rental {
     public RentalStatus getStatus() {
         return status;
     }
+    @Exclude
     public double getPrice() {
         return price;
     }
     public void setStatus(RentalStatus status) {
         this.status = status;
     }
+
     public User getHolderUser() {
         return holderUser;
     }
@@ -71,14 +73,16 @@ public class Rental {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-
+    @Exclude
     public String getDate(){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return formatter.format(startDate);
     }
+    @Exclude
     public long getDateInLong(){
         return startDate.getTime();
     }
+    @Exclude
     public String getTime(){
         Calendar calendarStart = Calendar.getInstance();
         calendarStart.setTime(startDate);

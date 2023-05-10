@@ -23,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
-import com.example.sharingchargingstations.Model.User;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -183,21 +182,19 @@ public class ScheduleActivity extends AppCompatActivity {
     public void rent(){
         if(selectedHour == -1)
             return;
-        User holderUser = null;
-        for(User u : model.getUsers()){
-            if(u.getMyChargingStation() == chargingStation)
-                holderUser = u;
-        }
         selectedHour = 13;
         Calendar calendar = Calendar.getInstance();
         Date tmpDate = new Date(selectedYear, selectedMonth, selectedDay, selectedHour, 0);
         Log.w(TAG, "rent: " + tmpDate);
         calendar.set(selectedYear, selectedMonth,selectedDay , selectedHour, 0, 0);
         Date startDate = calendar.getTime();
+
         calendar.add(Calendar.HOUR, 1);
         Date endDate = calendar.getTime();
+        Toast.makeText(ScheduleActivity.this, endDate.toString(), Toast.LENGTH_LONG).show();
 
-        Rental newRental = new Rental(chargingStation, holderUser, model.getCurrentUser(), startDate, endDate);
+
+        Rental newRental = new Rental(chargingStation, chargingStation.getUser(), model.getCurrentUser(), startDate, endDate);
         model.getRentals().add(newRental);
         model.addRental(newRental);
 

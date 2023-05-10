@@ -67,6 +67,11 @@ public class StationDetailsActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

@@ -99,24 +99,23 @@ public class Model {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<ChargingStation> chargingStations = new ArrayList<>();
     private ArrayList<Rental> rentals = new ArrayList<>();
-    private double totalRevenues;
-    private double totalExpenses;
 
     public double getTotalRevenues() {
-        double sum = 0;
+        double totalRevenues = 0;
         for (Rental rental : rentals) {
-            //rental.get
+            if(rental.getHolderUser() == currentUser)
+                totalRevenues += rental.getPrice();
         }
-        return sum;
+        return totalRevenues;
     }
-    public void setTotalRevenues(double totalRevenues) {
-        this.totalRevenues = totalRevenues;
-    }
+
     public double getTotalExpenses() {
+        double totalExpenses = 0;
+        for (Rental rental : rentals) {
+            if(rental.getRenterUser() == currentUser)
+                totalExpenses += rental.getPrice();
+        }
         return totalExpenses;
-    }
-    public void setTotalExpenses(double totalExpenses) {
-        this.totalExpenses = totalExpenses;
     }
     public ArrayList<User> getUsers() {
         return users;
@@ -162,18 +161,6 @@ public class Model {
         rentals.add(new Rental(chargingStations.get(2), currentUser, users.get(3), oneHourBack, Calendar.getInstance().getTime()));
         rentals.add(new Rental(chargingStations.get(3), users.get(3), currentUser, twoHourBack, Calendar.getInstance().getTime()));
         rentals.add(new Rental(chargingStations.get(4), users.get(2), currentUser, treeHourBack, Calendar.getInstance().getTime()));
-
-        totalRevenues = 0;
-        totalExpenses = 0;
-
-        for (Rental r : rentals) {
-            if (r.getHolderUser() == currentUser)
-                totalRevenues += r.getPrice();
-            else
-                totalExpenses += r.getPrice();
-        }
-
-        //currentUser.getMyChargingStation().
     }
     public FirebaseUser getAuthUser() {
         return mAuth.getCurrentUser();
