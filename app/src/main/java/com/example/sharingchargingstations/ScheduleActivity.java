@@ -3,7 +3,6 @@ package com.example.sharingchargingstations;
 //import androidx.annotation.NonNull;
 //import androidx.annotation.Nullable;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -172,7 +171,6 @@ public class ScheduleActivity extends AppCompatActivity {
             else
                 hours.add(new OrderHour(s, HourStatus.occupied));
 
-
             //            Toast.makeText(getApplicationContext(),"year: " + year + ", month: " + month + ", day: " + day,Toast.LENGTH_SHORT).show();
 
         }
@@ -180,9 +178,9 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     public void rent(){
+        selectedHour = getSelectedHour();
         if(selectedHour == -1)
             return;
-        selectedHour = 13;
         Calendar calendar = Calendar.getInstance();
         Date tmpDate = new Date(selectedYear, selectedMonth, selectedDay, selectedHour, 0);
         Log.w(TAG, "rent: " + tmpDate);
@@ -195,11 +193,10 @@ public class ScheduleActivity extends AppCompatActivity {
 
 
         Rental newRental = new Rental(chargingStation, chargingStation.getUser(), model.getCurrentUser(), startDate, endDate);
-        model.getRentals().add(newRental);
+//        model.getRentals().add(newRental);
         model.addRental(newRental);
 
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(i);
+        finish();
     }
     private enum HourStatus{
         free,
@@ -251,6 +248,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
         }
     }
+
 
 }
 

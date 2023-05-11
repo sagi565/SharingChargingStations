@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private Model model = Model.getInstance();
     private EditText etSearch;
     private ListView lstStations;
+    private TextView tvTitle;
     private ArrayAdapter<ChargingStation> chargingStationArrayAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         showUserDialog();
         lstStations = findViewById(R.id.lstStations);
+        tvTitle = findViewById(R.id.tvTitle);
+        tvTitle.setText("Hello " + model.getCurrentUser().getName());
+
         model.setContext(getApplicationContext());
         model.registerModelUpdate(new Model.IModelUpdate() {
             @Override
@@ -158,6 +162,25 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private Dialog searchDialog;
+    private void showSearchDialog()
+    {
+        searchDialog = new Dialog(this);
+        searchDialog.setContentView(R.layout.dialog_search);
+        searchDialog.setTitle("Search");
+        EditText etMaxPrice = searchDialog.findViewById(R.id.etMaxPrice);
+        Button btn = searchDialog.findViewById(R.id.btnSearch);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Todo: search dialog
+                //check validations
+                //if valid
+                //call set filter
+                //close dialog
+            }
+        });
+    }
     private void setFilter(String filter){
         filterChargingStations.clear();
         for(ChargingStation chargingStation : model.getChargingStations()){

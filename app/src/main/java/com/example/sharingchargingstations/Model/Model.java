@@ -21,21 +21,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class Model {
-    private static final String TAG = "sharingchargingstations.Model";
-    private Context context;
 
+    //region ModelUpdate
     public interface IModelUpdate {
-        public void userUpdate();
-        public void stationUpdate();
-        public void rentalUpdate();
+    public void userUpdate();
+    public void stationUpdate();
+    public void rentalUpdate();
 
-    }
+}
 
     private  ArrayList<IModelUpdate> iModelUpdates = new ArrayList<>();
 
@@ -46,13 +42,59 @@ public class Model {
     public void unRegisterModelUpdate(IModelUpdate iModelUpdate){
         if (iModelUpdates.contains(iModelUpdate)) iModelUpdates.remove(iModelUpdate);
     }
+    //endregion
 
-    private static Model instance;
+    //region Properties, Constructor, Getters and Setters
 
     private Model() {
         if (mAuth.getCurrentUser() != null && currentUser == null) currentUser = new User(mAuth.getCurrentUser());
         registerDBRef();
     }
+
+    private static Model instance;
+    private User currentUser;
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<ChargingStation> chargingStations = new ArrayList<>();
+    private ArrayList<Rental> rentals = new ArrayList<>();
+    private static final String TAG = "sharingchargingstations.Model";
+    private Context context;
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+    public ArrayList<ChargingStation> getChargingStations() {
+        return chargingStations;
+    }
+    public ArrayList<Rental> getRentals() {
+        return rentals;
+    }
+    public User getCurrentUser() {
+        return currentUser;
+    }
+    public void setContext(Context context){
+        this.context = context;
+    }
+    public static Model getInstance() {
+        if (instance == null)
+            instance = new Model();
+        return instance;
+    }
+
+
+    //endregion
+
+    //region FireBase
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersRef;
+    private CollectionReference stationsRef;
+    private CollectionReference rentalsRef;
+    private DocumentReference userRef;
+
+    public FirebaseUser getAuthUser() {
+        return mAuth.getCurrentUser();
+    }
+
     private void registerDBRef() {
         if (getAuthUser() != null) {
             usersRef = db.collection("Users");
@@ -76,34 +118,13 @@ public class Model {
                 rentalsListenerRegistration.remove();
         }
     }
-    public void setContext(Context context){
-        this.context = context;
-    }
-    public static Model getInstance() {
-        if (instance == null)
-            instance = new Model();
-        return instance;
-    }
+    //endregion
 
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference usersRef;
-    private CollectionReference stationsRef;
-    private CollectionReference rentalsRef;
-    private DocumentReference userRef;
-    private User currentUser;
-    private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<ChargingStation> chargingStations = new ArrayList<>();
-    private ArrayList<Rental> rentals = new ArrayList<>();
-
+    //region Revenues and Expenses
     public double getTotalRevenues() {
         double totalRevenues = 0;
         for (Rental rental : rentals) {
-            if(rental.getHolderUser() == currentUser)
+            if(rental.getHolderUser().getDocumentId().equals(currentUser.getDocumentId()))
                 totalRevenues += rental.getPrice();
         }
         return totalRevenues;
@@ -112,59 +133,14 @@ public class Model {
     public double getTotalExpenses() {
         double totalExpenses = 0;
         for (Rental rental : rentals) {
-            if(rental.getRenterUser() == currentUser)
+            if(rental.getRenterUser().getDocumentId().equals(currentUser.getDocumentId()))
                 totalExpenses += rental.getPrice();
         }
         return totalExpenses;
     }
-    public ArrayList<User> getUsers() {
-        return users;
-    }
-    public ArrayList<ChargingStation> getChargingStations() {
-        return chargingStations;
-    }
-    public ArrayList<Rental> getRentals() {
-        return rentals;
-    }
-    public void loadData() {
-        chargingStations.add(new ChargingStation(15, 3, 22, new Address("Givat Shmuel", "Hazeitim", "1"), TypeChargingStation.PP, 40, "Lovely charging station, very fast, no problems, on a quiet street."));
-        chargingStations.add(new ChargingStation(17, 12, 18, new Address("Givat Shmuel", "Hazeitim", "2"), TypeChargingStation.CP, 60, "Lovely charging station, very fast, no problems, on a quiet street."));
-        chargingStations.add(new ChargingStation(9, 15, 19, new Address("Givat Shmuel", "Hazeitim", "3"), TypeChargingStation.CCS2, 70, "Lovely charging station, very fast, no problems, on a quiet street."));
-        chargingStations.add(new ChargingStation(12, 7, 13, new Address("Tel Aviv", "Ibn Gvirol", "26"), TypeChargingStation.CHAdeMO, 70, "Lovely charging station, very fast, no problems, on a quiet street."));
-        chargingStations.add(new ChargingStation(8, 6, 8, new Address("Ramat Gan", "Jabotinsky", "65"), TypeChargingStation.CP, 30, "Lovely charging station, very fast, no problems, on a quiet street."));
+    //endregion
 
-
-        users.add(new User("Sagi", chargingStations.get(0)));
-        users.add(new User("Tamir", chargingStations.get(1)));
-        users.add(new User("Yoav", chargingStations.get(2)));
-        users.add(new User("Yaniv", chargingStations.get(3)));
-        users.add(new User("Noa", chargingStations.get(4)));
-
-        currentUser = users.get(0);
-
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date();
-        date.setTime(cal.getTime().getTime());
-        cal.setTime(date);
-        cal.add(Calendar.HOUR, -1);
-        Date oneHourBack = cal.getTime();
-
-        cal.add(Calendar.HOUR, -1);
-        Date twoHourBack = cal.getTime();
-        cal.add(Calendar.HOUR, -1);
-        Date treeHourBack = cal.getTime();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
-
-        rentals.add(new Rental(chargingStations.get(0), currentUser, users.get(1), oneHourBack, Calendar.getInstance().getTime()));
-        rentals.add(new Rental(chargingStations.get(1), currentUser, users.get(2), twoHourBack, Calendar.getInstance().getTime()));
-        rentals.add(new Rental(chargingStations.get(2), currentUser, users.get(3), oneHourBack, Calendar.getInstance().getTime()));
-        rentals.add(new Rental(chargingStations.get(3), users.get(3), currentUser, twoHourBack, Calendar.getInstance().getTime()));
-        rentals.add(new Rental(chargingStations.get(4), users.get(2), currentUser, treeHourBack, Calendar.getInstance().getTime()));
-    }
-    public FirebaseUser getAuthUser() {
-        return mAuth.getCurrentUser();
-    }
+    //region Current User
     public void login(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -185,6 +161,7 @@ public class Model {
                 });
 
     }
+
     public void createUser(String email, String password, String displayName) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -209,21 +186,27 @@ public class Model {
                     }
                 });
     }
+
     public void signOut() {
         mAuth.signOut();
         registerDBRef();
         raiseUserUpdate();
     }
+    //endregion
+
+    //region Users
+    private ListenerRegistration userListenerRegistration;
+
+    private void updateUser(User user) {
+        userRef.set(user);
+    }
+
     private void raiseUserUpdate() {
         for(IModelUpdate iModelUpdate : iModelUpdates){
             iModelUpdate.userUpdate();
         }
     }
-    private void raiseRentalUpdate() {
-        for(IModelUpdate iModelUpdate : iModelUpdates){
-            iModelUpdate.rentalUpdate();
-        }
-    }
+
     private void addUser(User user) {
         usersRef.document(user.getDocumentId()).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -238,24 +221,7 @@ public class Model {
             }
         });
     }
-    public void addRental(Rental rental) {
-        rentalsRef.add(rental)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.i(TAG, "onSuccess: added rental " + documentReference.getId());
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
 
-            }
-        });
-    }
-    private void updateUser(User user) {
-        userRef.set(user);
-    }
-    private ListenerRegistration userListenerRegistration;
     private void registerUserData() {
         userListenerRegistration = usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -291,6 +257,11 @@ public class Model {
             }
         });
     }
+
+    //endregion
+
+    //region ChargingStations
+
     public void addChargingStation(ChargingStation chargingStation) {
         stationsRef.add(chargingStation)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -305,7 +276,9 @@ public class Model {
             }
         });
     }
+
     private ListenerRegistration stationsListenerRegistration;
+
     private void registerStationsData() {
 
         stationsListenerRegistration = stationsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -345,6 +318,7 @@ public class Model {
             }
         });
     }
+
     public void updateChargingStation(ChargingStation chargingStation){
         stationsRef.document(chargingStation.getDocumentId()).set(chargingStation)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -361,12 +335,17 @@ public class Model {
                 });
     }
 
-
-    private void raiseStationUpdate(){
-        for(IModelUpdate update :iModelUpdates ){
-            update.stationUpdate();
+    private void raiseStationUpdate() {
+        for(IModelUpdate iModelUpdate : iModelUpdates){
+            iModelUpdate.stationUpdate();
         }
     }
+
+    //endregion
+
+    //region Rentals
+    private ListenerRegistration rentalsListenerRegistration;
+
     public void updateRental(Rental rental){
         rentalsRef.document(rental.getDocumentId()).set(rental)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -383,7 +362,6 @@ public class Model {
                 });
     }
 
-    private ListenerRegistration rentalsListenerRegistration;
     private void registerRentalsData() {
         rentalsListenerRegistration = rentalsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -421,12 +399,26 @@ public class Model {
         });
     }
 
-    private void raiseRentalsUpdate(){
-        for(IModelUpdate update :iModelUpdates ){
-            update.rentalUpdate();
-        }
+    public void addRental(Rental rental) {
+        rentalsRef.add(rental)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.i(TAG, "onSuccess: added rental " + documentReference.getId());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 
-
+    private void raiseRentalUpdate() {
+        for(IModelUpdate iModelUpdate : iModelUpdates){
+            iModelUpdate.rentalUpdate();
+        }
+    }
+    //endregion
 
 }

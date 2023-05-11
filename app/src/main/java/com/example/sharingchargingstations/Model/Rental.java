@@ -14,10 +14,6 @@ public class Rental {
     private Date startDate;
     private Date endDate;
     private ChargingStation chargingStation;
-
-
-
-    private double price;
     private RentalStatus status; //panding, inRent, done, canceled;
     public Rental(){}
     public Rental(ChargingStation chargingStation, User holderUser, User renterUser, Date startDate, Date endDate) {
@@ -26,9 +22,8 @@ public class Rental {
         this.startDate = startDate;
         this.endDate = endDate;
         this.chargingStation = chargingStation;
-        long secs = (this.endDate.getTime() - this.startDate.getTime()) / 1000;
-        double hours = secs / 3600;
-        price = chargingStation.getPricePerHour() * hours;
+        //long secs = (this.endDate.getTime() - this.startDate.getTime()) / 1000;
+        //double hours = secs / 3600;
         status = RentalStatus.panding;
     }
     public RentalStatus getStatus() {
@@ -36,7 +31,7 @@ public class Rental {
     }
     @Exclude
     public double getPrice() {
-        return price;
+        return chargingStation.getPricePerHour();
     }
     public void setStatus(RentalStatus status) {
         this.status = status;
@@ -101,10 +96,6 @@ public class Rental {
 
     public void setChargingStation(ChargingStation chargingStation) {
         this.chargingStation = chargingStation;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     @Exclude
