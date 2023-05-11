@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/ivSearch"
             android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="חיפוש"/>
+            android:hint="Search"/>
     </LinearLayout>
 
     <ListView

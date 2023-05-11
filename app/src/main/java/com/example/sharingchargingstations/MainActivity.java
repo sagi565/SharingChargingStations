@@ -1,6 +1,7 @@
 package com.example.sharingchargingstations;
 
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,8 +19,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,14 +35,19 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<ChargingStation> filterChargingStations = new ArrayList<>();
     private Model model = Model.getInstance();
     private EditText etSearch;
+    private ImageView ivSearch;
+
     private ListView lstStations;
     private TextView tvTitle;
     private ArrayAdapter<ChargingStation> chargingStationArrayAdapter;
+    private Dialog searchDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +55,16 @@ public class MainActivity extends AppCompatActivity {
         showUserDialog();
         lstStations = findViewById(R.id.lstStations);
         tvTitle = findViewById(R.id.tvTitle);
+        ivSearch = findViewById(R.id.ivSearch);
+
         tvTitle.setText("Hello " + model.getCurrentUser().getName());
+
+        ivSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSearchDialog();
+            }
+        });
 
         model.setContext(getApplicationContext());
         model.registerModelUpdate(new Model.IModelUpdate() {
@@ -162,24 +179,102 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Dialog searchDialog;
     private void showSearchDialog()
     {
         searchDialog = new Dialog(this);
         searchDialog.setContentView(R.layout.dialog_search);
         searchDialog.setTitle("Search");
+        searchDialog.show();
+
+
+        EditText etMinPrice = searchDialog.findViewById(R.id.etMinPrice);
         EditText etMaxPrice = searchDialog.findViewById(R.id.etMaxPrice);
-        Button btn = searchDialog.findViewById(R.id.btnSearch);
-        btn.setOnClickListener(new View.OnClickListener() {
+
+        EditText etTime = searchDialog.findViewById(R.id.etTime);
+        Spinner sType = searchDialog.findViewById(R.id.sType);
+        EditText etMinSpeed = searchDialog.findViewById(R.id.etMinChargingSpeed);
+        EditText etMaxSpeed = searchDialog.findViewById(R.id.etMaxChargingSpeed);
+        EditText etContainsDescription = searchDialog.findViewById(R.id.etContainsDescription);
+        Button btnSearch = searchDialog.findViewById(R.id.btnSearch);
+
+        String[] types = new String[]{"Select Type","PP", "CP", "CHAdeMO", "CCS2"};
+        ArrayAdapter<String> typesArrayAdapter;
+        sType.setPrompt("");
+
+
+        typesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, types);
+        sType.setAdapter(typesArrayAdapter);
+
+        etTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Todo: search dialog
-                //check validations
-                //if valid
-                //call set filter
-                //close dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(etTime.getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (minute >= 30)
+                            hourOfDay++;
+
+                        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, 0);
+                        etTime.setText(selectedTime);
+                    }
+                }, 24, 0, true);
+                timePickerDialog.setCanceledOnTouchOutside(false);
+                timePickerDialog.setTitle("Select a round hour");
+                timePickerDialog.show();
             }
         });
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!etMinPrice.getText().toString().equals("") && !etMaxPrice.getText().toString().equals("") && Integer.parseInt(etMinPrice.getText().toString()) > Integer.parseInt(etMaxPrice.getText().toString())){
+                    Toast.makeText(MainActivity.this, "Min Price is more than max price", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!etMinSpeed.getText().toString().equals("") && !etMaxSpeed.getText().toString().equals("") && Integer.parseInt(etMinSpeed.getText().toString()) > Integer.parseInt(etMaxSpeed.getText().toString())){
+                    Toast.makeText(MainActivity.this, "Min speed is more than max speed", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(etMinPrice.getText().toString().equals(""))
+                    etMinPrice.setText("-1");
+                if(etMaxPrice.getText().toString().equals(""))
+                    etMaxPrice.setText("1000");
+
+                if(etMinSpeed.getText().toString().equals(""))
+                    etMinSpeed.setText("-1");
+                if(etMaxSpeed.getText().toString().equals(""))
+                    etMaxSpeed.setText("1000");
+
+                if(etTime.getText().toString().equals(""))
+                    etTime.setText("-10");
+
+                searchDialog.dismiss();
+                setAdvancedFilter(Double.valueOf(etMinPrice.getText().toString()), Double.valueOf(etMaxPrice.getText().toString()), Integer.parseInt(etTime.getText().subSequence(0,2).toString())
+                ,sType.getSelectedItem().toString(), Double.valueOf(etMinSpeed.getText().toString()), Double.valueOf(etMaxSpeed.getText().toString())
+                ,etContainsDescription.getText().toString());
+
+            }
+        });
+
+
+    }
+    private void setAdvancedFilter(double minPrice, double maxPrice, int time, String type, double minSpeed, double maxSpeed, String ContainsDescription){
+        filterChargingStations.clear();
+        for(ChargingStation chargingStation : model.getChargingStations()){
+            if (chargingStation.getPricePerHour() >= minPrice
+                && chargingStation.getPricePerHour() <= maxPrice
+                && (time == -1 || (time >= chargingStation.getStartHour() && time <= chargingStation.getEndHour()))
+                && (type == "Select Type" || type.equals(chargingStation.getType().toString()))
+                && minSpeed <= chargingStation.getChargingSpeed()
+                && maxSpeed >= chargingStation.getChargingSpeed()
+                && chargingStation.getDescription().contains(ContainsDescription)
+                && chargingStation.getStatus() == ChargingStationStatus.active
+                && chargingStation != model.getCurrentUser().getMyChargingStation()){
+                filterChargingStations.add(chargingStation);
+            }
+        }
+        chargingStationArrayAdapter.notifyDataSetChanged();
+
     }
     private void setFilter(String filter){
         filterChargingStations.clear();
