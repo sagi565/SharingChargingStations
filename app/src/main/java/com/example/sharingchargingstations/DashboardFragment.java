@@ -3,6 +3,7 @@ package com.example.sharingchargingstations;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class RentalsActivity extends AppCompatActivity{
+public class DashboardFragment extends Fragment {
     private ArrayList<Rental> rentals = new ArrayList<>();
     private Model model = Model.getInstance();
     private ListView lstRentals;
@@ -34,23 +35,21 @@ public class RentalsActivity extends AppCompatActivity{
     private TextView tvItemDate;
     private TextView tvItemHours;
     private Button btnBack;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rentals);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_dashboard,container, false);
+
         rentals = model.getRentals();
-        lstRentals = findViewById(R.id.lvRentals);
-        totalRevenues = findViewById(R.id.tvTotalRevenues);
-        totalExpeness = findViewById(R.id.tvTotalExpenses);
+        lstRentals = view.findViewById(R.id.lvRentals);
+        totalRevenues = view.findViewById(R.id.tvTotalRevenues);
+        totalExpeness = view.findViewById(R.id.tvTotalExpenses);
         totalRevenues.setText("Revenues: " + String.valueOf(model.getTotalRevenues()) + "₪");
         totalExpeness.setText("Expenses: " + String.valueOf(model.getTotalExpenses()) + "₪");
-        btnBack = findViewById(R.id.btnBack);
-
-
+        btnBack = view.findViewById(R.id.btnBack);
         Collections.sort(rentals, Comparator.comparingLong(Rental::getDateInLong));
 
-        rentalsArrayAdapter = new ArrayAdapter<Rental>(this, R.layout.item_rental,rentals){
+        rentalsArrayAdapter = new ArrayAdapter<Rental>(getActivity(), R.layout.item_rental,rentals){
             @Override
             public View getView(int position, @Nullable View convertView, ViewGroup parent) {
                 View view =  getLayoutInflater().inflate(R.layout.item_rental,null);
@@ -101,7 +100,7 @@ public class RentalsActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Rental rental = rentals.get(position);
                 int pos = model.getRentals().indexOf(rental);
-                Intent i = new Intent(getApplicationContext(), RentalHistoryActivity.class);
+                Intent i = new Intent(getActivity(), RentalHistoryActivity.class);
                 i.putExtra("pos", pos);
                 i.putExtra("time", rental.getDate() + " | " + rental.getTime());
                 startActivity(i);
@@ -110,7 +109,7 @@ public class RentalsActivity extends AppCompatActivity{
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getActivity(), MainActivity.class));
             }
         });
         model.registerModelUpdate(new Model.IModelUpdate() {
@@ -129,9 +128,7 @@ public class RentalsActivity extends AppCompatActivity{
             }
         });
 
+        return view;
 
     }
-
-
-
 }
