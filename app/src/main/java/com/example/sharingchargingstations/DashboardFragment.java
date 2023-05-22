@@ -76,12 +76,10 @@ public class DashboardFragment extends Fragment {
                 }
                 if(rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())){
                     view.setBackgroundColor(Color.rgb(208, 240, 192));
-
                 }
                 else
                 {
                     view.setBackgroundColor(Color.rgb(135,206,235));
-
                 }
 
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

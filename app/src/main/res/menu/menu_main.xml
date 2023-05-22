@@ -3,13 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_user"
-        android:icon="@drawable/ic_person"
-        android:title="User"
+        android:id="@+id/action_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="LogOut"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_rentals"
-        android:icon="@drawable/ic_car"
-        android:title="Rentals"
-        app:showAsAction="ifRoom" />
+
 </menu>

@@ -1,7 +1,7 @@
 package com.example.sharingchargingstations;
 
 import android.app.Dialog;
-import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -30,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, Model.IModelUpdate {
     private ArrayList<ChargingStation> filterChargingStations = new ArrayList<>();
     private Model model = Model.getInstance();
     private EditText etSearch;
@@ -46,114 +47,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LinearLayout LinearLayout = findViewById(R.id.linear_layout);
+        AnimationDrawable animationDrawable = (AnimationDrawable)LinearLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(2500);
+        animationDrawable.setExitFadeDuration(5000);
+        animationDrawable.start();
+
         model.setContext(getApplicationContext());
         showUserDialog();
-//        frameLayout = findViewById(R.id.fragment_container);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new SearchFragment()).commit();
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(this);
 
-//        lstStations = findViewById(R.id.lstStations);
-//        tvTitle = findViewById(R.id.tvTitle);
-//        ivSearch = findViewById(R.id.ivSearch);
-//
-//        tvTitle.setText("Hello " + model.getCurrentUser().getName());
-//
-//        ivSearch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showSearchDialog();
-//            }
-//        });
-//
-        model.setContext(getApplicationContext());
-//        model.registerModelUpdate(new Model.IModelUpdate() {
-//            @Override
-//            public void userUpdate() {
-//                //when user in doing signout  we should show user dialog for sign in
-//                showUserDialog();
-//            }
-//
-//            @Override
-//            public void stationUpdate() {
-//                setFilter(etSearch.getText().toString().trim());
-//                chargingStationArrayAdapter.notifyDataSetChanged();
-//            }
-//            @Override
-//            public void rentalUpdate() {
-//
-//            }
-//        });
-//        chargingStationArrayAdapter = new ArrayAdapter<ChargingStation>(this, R.layout.item_charging_station,filterChargingStations){
-//            @NonNull
-//            @Override
-//            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//                View view =  getLayoutInflater().inflate(R.layout.item_charging_station,null);
-//                TextView tvItemAddress = view.findViewById(R.id.tvItemAddress);
-//                TextView tvItemHours = view.findViewById(R.id.tvItemHours);
-//                TextView tvItemType = view.findViewById(R.id.tvChargingType);
-//                TextView tvItemPrice = view.findViewById(R.id.tvItemPrice);
-//
-//                ImageView ivChargingStation = view.findViewById(R.id.ivChargingStation);
-//
-//
-//                ChargingStation chargingStation = getItem(position);
-//                tvItemType.setText(chargingStation.getType().toString());
-//                tvItemAddress.setText(chargingStation.getStationAddress().toString());
-//                tvItemHours.setText(chargingStation.getTime());
-//                tvItemPrice.setText(chargingStation.getPricePerHour() + "₪");
-//
-//
-//                switch (tvItemType.getText().toString()){
-//                    case "PP":
-//                        ivChargingStation.setColorFilter(Color.rgb(147, 197, 114));
-//                        break;
-//                    case "CP":
-//                        ivChargingStation.setColorFilter(Color.rgb(135,206,235));
-//                        break;
-//                    case "CCS2":
-//                        ivChargingStation.setColorFilter(Color.rgb(240,128,128));
-//                        break;
-//                    case "CHAdeMO":
-//                        ivChargingStation.setColorFilter(Color.rgb(255, 234, 0));
-//
-//                        tvItemType.setTextSize(14);
-//                        break;
-//                }
-//
-//                return view;
-//            }
-//        };
-//        setFilter("");
-//        lstStations.setAdapter(chargingStationArrayAdapter);
-//        etSearch = findViewById(R.id.etSearchStation);
-//        etSearch.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                setFilter(s.toString());
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-//        lstStations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                ChargingStation chargingStation = filterChargingStations.get(position);
-//                int pos = model.getChargingStations().indexOf(chargingStation);
-//                Intent i = new Intent(getApplicationContext(), StationDetailsActivity.class);
-//                i.putExtra("pos", pos);
-//                startActivity(i);
-//            }
-//        });
+        model.registerModelUpdate(this);
 
     }
 
@@ -166,128 +73,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_user:
-                Intent intentProfile = new Intent(this, ProfileActivity.class);
-
-                startActivityForResult(intentProfile, 10);
-                return true;
-            case R.id.action_rentals:
-                Intent intentRentals = new Intent(this, RentalsActivity.class);
-                startActivity(intentRentals);
+            case R.id.action_logout:
+                model.signOut();
                 return true;
 
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    private void showSearchDialog()
-//    {
-//        searchDialog = new Dialog(this);
-//        searchDialog.setContentView(R.layout.dialog_search);
-//        searchDialog.setTitle("Search");
-//        searchDialog.show();
-//
-//
-//        EditText etMinPrice = searchDialog.findViewById(R.id.etMinPrice);
-//        EditText etMaxPrice = searchDialog.findViewById(R.id.etMaxPrice);
-//
-//        EditText etTime = searchDialog.findViewById(R.id.etTime);
-//        Spinner sType = searchDialog.findViewById(R.id.sType);
-//        EditText etMinSpeed = searchDialog.findViewById(R.id.etMinChargingSpeed);
-//        EditText etMaxSpeed = searchDialog.findViewById(R.id.etMaxChargingSpeed);
-//        EditText etContainsDescription = searchDialog.findViewById(R.id.etContainsDescription);
-//        Button btnSearch = searchDialog.findViewById(R.id.btnSearch);
-//
-//        String[] types = new String[]{"Select Type","PP", "CP", "CHAdeMO", "CCS2"};
-//        ArrayAdapter<String> typesArrayAdapter;
-//        sType.setPrompt("");
-//
-//
-//        typesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, types);
-//        sType.setAdapter(typesArrayAdapter);
-//
-//        etTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                TimePickerDialog timePickerDialog = new TimePickerDialog(etTime.getContext(), new TimePickerDialog.OnTimeSetListener() {
-//                    @Override
-//                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-//                        if (minute >= 30)
-//                            hourOfDay++;
-//
-//                        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, 0);
-//                        etTime.setText(selectedTime);
-//                    }
-//                }, 24, 0, true);
-//                timePickerDialog.setCanceledOnTouchOutside(false);
-//                timePickerDialog.setTitle("Select a round hour");
-//                timePickerDialog.show();
-//            }
-//        });
-//        btnSearch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if(!etMinPrice.getText().toString().equals("") && !etMaxPrice.getText().toString().equals("") && Integer.parseInt(etMinPrice.getText().toString()) > Integer.parseInt(etMaxPrice.getText().toString())){
-//                    Toast.makeText(MainActivity.this, "Min Price is more than max price", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                if(!etMinSpeed.getText().toString().equals("") && !etMaxSpeed.getText().toString().equals("") && Integer.parseInt(etMinSpeed.getText().toString()) > Integer.parseInt(etMaxSpeed.getText().toString())){
-//                    Toast.makeText(MainActivity.this, "Min speed is more than max speed", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                if(etMinPrice.getText().toString().equals(""))
-//                    etMinPrice.setText("-1");
-//                if(etMaxPrice.getText().toString().equals(""))
-//                    etMaxPrice.setText("1000");
-//
-//                if(etMinSpeed.getText().toString().equals(""))
-//                    etMinSpeed.setText("-1");
-//                if(etMaxSpeed.getText().toString().equals(""))
-//                    etMaxSpeed.setText("1000");
-//
-//                if(etTime.getText().toString().equals(""))
-//                    etTime.setText("-10");
-//
-//                searchDialog.dismiss();
-//                setAdvancedFilter(Double.valueOf(etMinPrice.getText().toString()), Double.valueOf(etMaxPrice.getText().toString()), Integer.parseInt(etTime.getText().subSequence(0,2).toString())
-//                ,sType.getSelectedItem().toString(), Double.valueOf(etMinSpeed.getText().toString()), Double.valueOf(etMaxSpeed.getText().toString())
-//                ,etContainsDescription.getText().toString());
-//
-//            }
-//        });
-//
-//
-//    }
-//    private void setAdvancedFilter(double minPrice, double maxPrice, int time, String type, double minSpeed, double maxSpeed, String ContainsDescription){
-//        filterChargingStations.clear();
-//        for(ChargingStation chargingStation : model.getChargingStations()){
-//            if (chargingStation.getPricePerHour() >= minPrice
-//                && chargingStation.getPricePerHour() <= maxPrice
-//                && (time == -1 || (time >= chargingStation.getStartHour() && time <= chargingStation.getEndHour()))
-//                && (type == "Select Type" || type.equals(chargingStation.getType().toString()))
-//                && minSpeed <= chargingStation.getChargingSpeed()
-//                && maxSpeed >= chargingStation.getChargingSpeed()
-//                && chargingStation.getDescription().contains(ContainsDescription)
-//                && chargingStation.getStatus() == ChargingStationStatus.active
-//                && chargingStation != model.getCurrentUser().getMyChargingStation()){
-//                filterChargingStations.add(chargingStation);
-//            }
-//        }
-//        chargingStationArrayAdapter.notifyDataSetChanged();
-//
-//    }
-//    private void setFilter(String filter){
-//        filterChargingStations.clear();
-//        for(ChargingStation chargingStation : model.getChargingStations()){
-//            if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())
-//                    && chargingStation.getStatus() == ChargingStationStatus.active
-//                    && chargingStation != model.getCurrentUser().getMyChargingStation()){
-//                filterChargingStations.add(chargingStation);
-//            }
-//        }
-//        chargingStationArrayAdapter.notifyDataSetChanged();
-//    }
 
     private void showUserDialog(){
         if (model.getAuthUser() == null){
@@ -302,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             Switch aSwitch = userDialog.findViewById(R.id.swtchState);
             EditText etFullName = userDialog.findViewById(R.id.etDialogFullName);
             EditText etEmail = userDialog.findViewById(R.id.etDialogEmail);
+            ImageView ivDialogImage = userDialog.findViewById(R.id.ivDialogImage);
+
             etEmail.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -325,10 +119,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             EditText etPassword = userDialog.findViewById(R.id.etDialogPassword);
             etFullName.setVisibility(View.GONE);
             Button btnSubmit = userDialog.findViewById(R.id.btnDialogDone);
+            //ivDialogImage.setVisibility(View.VISIBLE);
             aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     etFullName.setVisibility(b ? View.VISIBLE : View.GONE);
+                    ivDialogImage.setVisibility(View.VISIBLE);
+
                     btnSubmit.setText(b? "Create" : "Sign in");
                 }
             });
@@ -337,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 public void onClick(View view) {
                     if (aSwitch.isChecked()){
                         model.createUser(etEmail.getText().toString(), etPassword.getText().toString(), etFullName.getText().toString());
+                        
                     }
                     else
                     {
@@ -345,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     userDialog.dismiss();
                 }
             });
-//            ivDialogImage = userDialog.findViewById(R.id.ivDialogImage);
+
 //            ivDialogImage.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View view) {
@@ -372,5 +170,23 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void userUpdate() {
+        showUserDialog();
+        //show user detalids
+        //show dialog
+    }
+
+    @Override
+    public void stationUpdate() {
+        // update stations adapter
+
+    }
+
+    @Override
+    public void rentalUpdate() {
+        //update rental adapter
     }
 }

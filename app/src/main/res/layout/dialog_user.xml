@@ -40,10 +40,9 @@
 
     <ImageView
         android:id="@+id/ivDialogImage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/common_full_open_on_phone"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_width="wrap_content"
+        android:layout_height="270dp"
+        android:src="@drawable/ic_men" />
 
     <Button
         android:id="@+id/btnDialogDone"

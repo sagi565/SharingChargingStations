@@ -68,6 +68,9 @@ public class SearchFragment extends Fragment {
             public void userUpdate() {
                 //when user in doing signout  we should show user dialog for sign in
 //                showUserDialog();
+                if (model.getCurrentUser() != null)
+                    tvTitle.setText("Hello " + model.getCurrentUser().getName());
+
             }
 
             @Override
@@ -255,10 +258,10 @@ public class SearchFragment extends Fragment {
         for(ChargingStation chargingStation : model.getChargingStations()){
             if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())
                     && chargingStation.getStatus() == ChargingStationStatus.active
-                    && chargingStation != model.getCurrentUser().getMyChargingStation()){
+                    && chargingStation.getUser().getDocumentId() != model.getCurrentUser().getDocumentId())
                 filterChargingStations.add(chargingStation);
             }
-        }
+
         chargingStationArrayAdapter.notifyDataSetChanged();
     }
 

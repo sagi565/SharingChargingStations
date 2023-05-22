@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/gradient_animation"
+    android:id="@+id/linear_layout">
 
     <FrameLayout
         android:id="@+id/fragment_container"
