@@ -1,11 +1,13 @@
 package com.example.sharingchargingstations;
 
 import android.app.TimePickerDialog;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -44,6 +46,11 @@ public class AddChargingStationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_charging_station);
+        LinearLayout LinearLayout = findViewById(R.id.linear_layout);
+        AnimationDrawable animationDrawable = (AnimationDrawable)LinearLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(2500);
+        animationDrawable.setExitFadeDuration(5000);
+        animationDrawable.start();
 
         city = getIntent().getStringExtra("City");
         street = getIntent().getStringExtra("Street");

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class SearchFragment extends Fragment {
+
     private ArrayList<ChargingStation> filterChargingStations = new ArrayList<>();
 
     private EditText etSearch;
@@ -56,6 +57,7 @@ public class SearchFragment extends Fragment {
         if (model.getCurrentUser() != null)
             tvTitle.setText("Hello " + model.getCurrentUser().getName());
 
+
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +68,6 @@ public class SearchFragment extends Fragment {
         model.registerModelUpdate(new Model.IModelUpdate() {
             @Override
             public void userUpdate() {
-                //when user in doing signout  we should show user dialog for sign in
 //                showUserDialog();
                 if (model.getCurrentUser() != null)
                     tvTitle.setText("Hello " + model.getCurrentUser().getName());
@@ -75,12 +76,13 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void stationUpdate() {
-                setFilter(etSearch.getText().toString().trim());
+                setFilter(etSearch.getText().toString());
                 chargingStationArrayAdapter.notifyDataSetChanged();
             }
             @Override
             public void rentalUpdate() {
-
+                setFilter(etSearch.getText().toString());
+                chargingStationArrayAdapter.notifyDataSetChanged();
             }
         });
         chargingStationArrayAdapter = new ArrayAdapter<ChargingStation>(getActivity(), R.layout.item_charging_station,filterChargingStations){
@@ -123,8 +125,9 @@ public class SearchFragment extends Fragment {
                 return view;
             }
         };
-        setFilter("");
         lstStations.setAdapter(chargingStationArrayAdapter);
+        setFilter("");
+
         etSearch = view.findViewById(R.id.etSearchStation);
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -246,19 +249,20 @@ public class SearchFragment extends Fragment {
                     && maxSpeed >= chargingStation.getChargingSpeed()
                     && chargingStation.getDescription().contains(ContainsDescription)
                     && chargingStation.getStatus() == ChargingStationStatus.active
-                    && chargingStation != model.getCurrentUser().getMyChargingStation()){
+                    && !chargingStation.getUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())){
                 filterChargingStations.add(chargingStation);
             }
         }
         chargingStationArrayAdapter.notifyDataSetChanged();
 
     }
-    private void setFilter(String filter){
+    public void setFilter(String filter){
         filterChargingStations.clear();
+
         for(ChargingStation chargingStation : model.getChargingStations()){
             if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())
                     && chargingStation.getStatus() == ChargingStationStatus.active
-                    && chargingStation.getUser().getDocumentId() != model.getCurrentUser().getDocumentId())
+                    && !chargingStation.getUser().getDocumentId().equals(model.getCurrentUser().getDocumentId()))
                 filterChargingStations.add(chargingStation);
             }
 
@@ -266,3 +270,6 @@ public class SearchFragment extends Fragment {
     }
 
 }
+
+
+

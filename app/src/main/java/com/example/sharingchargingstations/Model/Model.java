@@ -65,9 +65,7 @@ public class Model {
     public ArrayList<ChargingStation> getChargingStations() {
         return chargingStations;
     }
-    public ArrayList<Rental> getRentals() {
-        return rentals;
-    }
+    public ArrayList<Rental> getRentals() { return rentals; }
     public User getCurrentUser() {
         return currentUser;
     }
@@ -149,6 +147,8 @@ public class Model {
                         //set user
                         currentUser = new User(getAuthUser());
                         raiseUserUpdate();
+                        raiseStationUpdate();
+                        raiseRentalUpdate();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

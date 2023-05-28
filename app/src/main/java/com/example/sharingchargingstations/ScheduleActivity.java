@@ -4,6 +4,7 @@ package com.example.sharingchargingstations;
 //import androidx.annotation.Nullable;
 
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -56,6 +57,11 @@ public class ScheduleActivity extends AppCompatActivity {
         selectedYear = calendar.get(Calendar.YEAR);
         selectedMonth = calendar.get(Calendar.MONTH) + 1;
         selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
+        LinearLayout LinearLayout = findViewById(R.id.linear_layout);
+        AnimationDrawable animationDrawable = (AnimationDrawable)LinearLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(2500);
+        animationDrawable.setExitFadeDuration(5000);
+        animationDrawable.start();
 
         pos = getIntent().getIntExtra("pos", -1);
         chargingStation = model.getChargingStations().get(pos);
@@ -145,7 +151,6 @@ public class ScheduleActivity extends AppCompatActivity {
     private void setHoursList(final int year, final int month, final int day) {
         final int dateYear = year - 1900; //Java date year is since 1900 (2023 is 123)
         final int dateMonth = year - 1900; //Java date year is since 1900 (2023 is 123)
-        Log.w(TAG, "setHoursList: ==================================="  );
         hours.clear();
         Rental rental;
         for (int i = (int) chargingStation.getMinHour(); i < (int) chargingStation.getEndHour(); i++) {

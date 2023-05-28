@@ -1,11 +1,10 @@
 package com.example.sharingchargingstations;
 
-import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,13 +13,13 @@ import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
 
 public class RentalHistoryActivity extends AppCompatActivity {
+    private TextView tvTitle;
     private TextView tvTime;
     private TextView tvStationAddress;
     private TextView tvPricePerHour;
     private TextView tvTotalPrice;
     private TextView tvPeopleName;
     private ImageView ivStatus;
-    private Button btnBack;
 
 
     private Model model = Model.getInstance();
@@ -39,7 +38,12 @@ public class RentalHistoryActivity extends AppCompatActivity {
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
         tvPeopleName = findViewById(R.id.tvRenterName);
         ivStatus = findViewById(R.id.ivStatus);
-        btnBack = findViewById(R.id.btnBack);
+        tvTitle = findViewById(R.id.tvRentalHistory);
+        LinearLayout LinearLayout = findViewById(R.id.linear_layout);
+        AnimationDrawable animationDrawable = (AnimationDrawable)LinearLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(2500);
+        animationDrawable.setExitFadeDuration(5000);
+        animationDrawable.start();
 
         Bundle extras = getIntent().getExtras();
         pos = extras.getInt("pos");
@@ -62,26 +66,26 @@ public class RentalHistoryActivity extends AppCompatActivity {
                 break;
         }
         tvStationAddress.setText(rental.getChargingStation().getStationAddress().toString());
-        tvPricePerHour.setText("Price Per Hour: " + String.valueOf(rental.getChargingStation().getPricePerHour()) + "₪");
-        tvTotalPrice.setText("Total Price: " + String.valueOf(rental.getPrice()) + "₪");
+        tvPricePerHour.setText("Price Per Hour: " + String.valueOf(rental.getChargingStation().getPricePerHour()).replace(".0", "") + "₪");
+
+        tvTotalPrice.setText("Total Price: " + String.valueOf(rental.getPrice()).replace(".0", "") + "₪");
+
+        tvTime.setBackgroundColor(Color.rgb(255,69,0));
+        tvPeopleName.setBackgroundColor(Color.rgb(250,128,114));
+        tvStationAddress.setBackgroundColor(Color.rgb(250,128,114));
+        tvPricePerHour.setBackgroundColor(Color.rgb(255,69,0));
+
+        tvTotalPrice.setTextColor(Color.rgb(220,20,60));
+        tvTitle.setTextColor(Color.rgb(220,20,60));
+
+
+
 
         if(rental.getHolderUser() == model.getCurrentUser()){
-            tvPeopleName.setText("Owner: You  -  Renter: " + rental.getRenterUser().getName());
-            tvTotalPrice.setTextColor(Color.rgb(50,205,50)); // green
+            tvPeopleName.setText("Owner: You  |  Renter: " + rental.getRenterUser().getName());
         }
         else{
-            tvPeopleName.setText("Owner: " + model.getCurrentUser().getName() + "  -  Renter: You");
-            tvTotalPrice.setTextColor(Color.rgb(30,144,255)); // blue
+            tvPeopleName.setText("Owner: " + model.getCurrentUser().getName() + "  |  Renter: You");
         }
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RentalsActivity.class));
-            }
-        });
-
-
-
     }
 }

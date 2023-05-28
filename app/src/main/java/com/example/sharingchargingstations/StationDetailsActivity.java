@@ -1,9 +1,11 @@
 package com.example.sharingchargingstations;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +45,11 @@ public class StationDetailsActivity extends AppCompatActivity {
         tvTypeOfChargingStation = findViewById(R.id.tvTypeStation);
         tvChargingSpeed = findViewById(R.id.tvChargingSpeed);
         tvDescription = findViewById(R.id.tvDescription);
+        LinearLayout LinearLayout = findViewById(R.id.linear_layout);
+        AnimationDrawable animationDrawable = (AnimationDrawable)LinearLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(2500);
+        animationDrawable.setExitFadeDuration(5000);
+        animationDrawable.start();
 
         btnRent = findViewById(R.id.btnRent);
         btnBack = findViewById(R.id.btnBack);

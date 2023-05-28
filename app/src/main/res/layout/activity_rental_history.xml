@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RentalHistoryActivity">
+    tools:context=".RentalHistoryActivity"
+    android:background="@drawable/gradient_animation"
+    android:id="@+id/linear_layout">
 
 
     <LinearLayout
@@ -16,10 +18,10 @@
             android:id="@+id/tvRentalHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:gravity="center"
             android:text="Rental History"
-            android:textSize="40dp"
+            android:textSize="50dp"
             android:textStyle="bold" />
 
         <ImageView
@@ -27,16 +29,18 @@
             android:layout_gravity="center"
             android:layout_width="65dp"
             android:layout_height="65dp"
+            android:layout_margin="15dp"
             app:srcCompat="@drawable/ic_panding" />
 
         <TextView
             android:id="@+id/tvRenterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="25dp"
             android:layout_weight="0"
             android:gravity="center"
-            android:text="Renter Name   "
+            android:text="Renter Name"
             android:textSize="25sp"
             android:textStyle="normal" />
 
@@ -44,52 +48,45 @@
             android:id="@+id/tvTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Time"
             android:textSize="25sp"
+            android:layout_marginBottom="25dp"
             android:textStyle="normal" />
 
         <TextView
             android:id="@+id/tvStationAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Station Address"
             android:textSize="25sp"
+            android:layout_marginBottom="25dp"
             android:textStyle="normal" />
 
         <TextView
             android:id="@+id/tvPricePerHour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Price Per Hour"
             android:textSize="25sp"
+            android:layout_marginBottom="25dp"
             android:textStyle="normal" />
 
         <TextView
             android:id="@+id/tvTotalPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_weight="0"
             android:gravity="center"
             android:text="Total Price"
-            android:textSize="25sp"
-            android:textStyle="normal" />
+            android:textSize="35sp"
+            android:layout_marginBottom="25dp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="Back"
-            android:textSize="30sp" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -30,6 +30,8 @@ public class DashboardFragment extends Fragment {
     private Model model = Model.getInstance();
     private ListView lstRentals;
     private ArrayAdapter<Rental> rentalsArrayAdapter;
+    private ArrayAdapter<Rental> filterRentalsArrayAdapter;
+
     private TextView totalRevenues;
     private TextView totalExpeness;
     private TextView tvItemDate;
@@ -40,7 +42,11 @@ public class DashboardFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_dashboard,container, false);
 
-        rentals = model.getRentals();
+        for(Rental rental : model.getRentals()){
+            if (rental.getRenterUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())
+                    || rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId()))
+                rentals.add(rental);
+        }
         lstRentals = view.findViewById(R.id.lvRentals);
         totalRevenues = view.findViewById(R.id.tvTotalRevenues);
         totalExpeness = view.findViewById(R.id.tvTotalExpenses);
@@ -49,7 +55,7 @@ public class DashboardFragment extends Fragment {
         btnBack = view.findViewById(R.id.btnBack);
         Collections.sort(rentals, Comparator.comparingLong(Rental::getDateInLong));
 
-        rentalsArrayAdapter = new ArrayAdapter<Rental>(getActivity(), R.layout.item_rental,rentals){
+        filterRentalsArrayAdapter = new ArrayAdapter<Rental>(getActivity(), R.layout.item_rental,rentals){
             @Override
             public View getView(int position, @Nullable View convertView, ViewGroup parent) {
                 View view =  getLayoutInflater().inflate(R.layout.item_rental,null);
@@ -85,13 +91,19 @@ public class DashboardFragment extends Fragment {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 tvItemDate.setText(formatter.format(rental.getStartDate()));
                 tvItemHours.setText(rental.getTime());
-                tvItemMoney.setText(rental.getPrice() + "₪");
-                tvItemRenterUser.setText(rental.getRenterUser().getName());
+                tvItemMoney.setText(String.valueOf(rental.getPrice()).replace(".0", "") + "₪");
+                if(rental.getRenterUser().getDocumentId().equals(model.getCurrentUser().getDocumentId()))
+                    tvItemRenterUser.setText(rental.getHolderUser().getName());
+                else
+                    tvItemRenterUser.setText(rental.getRenterUser().getName());
+
+
 
                 return view;
             }
         };
-        lstRentals.setAdapter(rentalsArrayAdapter);
+
+        lstRentals.setAdapter(filterRentalsArrayAdapter);
 
         lstRentals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -104,6 +116,8 @@ public class DashboardFragment extends Fragment {
                 startActivity(i);
             }
         });
+        //setFilter();
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,7 +136,7 @@ public class DashboardFragment extends Fragment {
             }
             @Override
             public void rentalUpdate() {
-                //setList();
+
             }
         });
 

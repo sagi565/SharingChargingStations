@@ -3,9 +3,6 @@ package com.example.sharingchargingstations;
 import android.app.Dialog;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -96,26 +92,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             EditText etEmail = userDialog.findViewById(R.id.etDialogEmail);
             ImageView ivDialogImage = userDialog.findViewById(R.id.ivDialogImage);
 
-            etEmail.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    String txt = editable.toString();
-                    if (Patterns.EMAIL_ADDRESS.matcher(txt).matches())
-                    {
-                        Toast.makeText(MainActivity.this, "Email is not valid", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
             EditText etPassword = userDialog.findViewById(R.id.etDialogPassword);
             etFullName.setVisibility(View.GONE);
             Button btnSubmit = userDialog.findViewById(R.id.btnDialogDone);
@@ -134,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 public void onClick(View view) {
                     if (aSwitch.isChecked()){
                         model.createUser(etEmail.getText().toString(), etPassword.getText().toString(), etFullName.getText().toString());
-                        
                     }
                     else
                     {
                         model.login(etEmail.getText().toString(), etPassword.getText().toString());
                     }
+
                     userDialog.dismiss();
                 }
             });
@@ -175,18 +151,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public void userUpdate() {
         showUserDialog();
-        //show user detalids
-        //show dialog
     }
 
     @Override
     public void stationUpdate() {
-        // update stations adapter
-
     }
 
     @Override
     public void rentalUpdate() {
-        //update rental adapter
+
     }
 }
