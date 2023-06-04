@@ -16,6 +16,8 @@
             android:gravity="center"
             android:text="Rentals"
             android:textSize="40sp"
+            android:textColor="#0000CD"
+
             android:textStyle="bold" />
 
         <LinearLayout
@@ -32,6 +34,7 @@
                 android:gravity="center"
                 android:text="Revenues"
                 android:textSize="22sp"
+                android:textColor="#0000CD"
                 android:textStyle="bold" />
 
             <TextView
@@ -42,6 +45,7 @@
                 android:gravity="center"
                 android:text="Expenses"
                 android:textSize="22sp"
+                android:textColor="#0000CD"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -49,13 +53,9 @@
         <ListView
             android:id="@+id/lvRentals"
             android:layout_width="match_parent"
-            android:layout_height="430dp" />
+            android:layout_height="430dp"
+            android:dividerHeight="10dp"
+            android:divider="@android:color/transparent"/>
 
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back"
-            android:textSize="30sp" />
     </LinearLayout>
 </LinearLayout>

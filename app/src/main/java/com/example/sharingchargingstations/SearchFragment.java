@@ -102,7 +102,7 @@ public class SearchFragment extends Fragment {
                 tvItemType.setText(chargingStation.getType().toString());
                 tvItemAddress.setText(chargingStation.getStationAddress().toString());
                 tvItemHours.setText(chargingStation.getTime());
-                tvItemPrice.setText(chargingStation.getPricePerHour() + "₪");
+                tvItemPrice.setText(String.valueOf(chargingStation.getPricePerHour()).replace(".0", "") + "₪");
 
 
                 switch (tvItemType.getText().toString()){
@@ -117,7 +117,6 @@ public class SearchFragment extends Fragment {
                         break;
                     case "CHAdeMO":
                         ivChargingStation.setColorFilter(Color.rgb(255, 234, 0));
-
                         tvItemType.setTextSize(14);
                         break;
                 }

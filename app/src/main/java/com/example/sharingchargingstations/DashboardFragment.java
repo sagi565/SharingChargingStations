@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
+import com.example.sharingchargingstations.Model.RentalStatus;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 public class DashboardFragment extends Fragment {
     private ArrayList<Rental> rentals = new ArrayList<>();
@@ -36,29 +37,42 @@ public class DashboardFragment extends Fragment {
     private TextView totalExpeness;
     private TextView tvItemDate;
     private TextView tvItemHours;
-    private Button btnBack;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_dashboard,container, false);
+        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        Date currentDate = new Date();
+        currentDate.setTime(currentDate.getTime() + 1000*60*60*3);
 
-        for(Rental rental : model.getRentals()){
+        for (Rental rental : model.getRentals()) {
+            // Get the rentals of the current user
             if (rental.getRenterUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())
-                    || rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId()))
+                    || rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())) {
+                //pending if start date bigger then now
+                //inrent if end date bigger then now
+                //done if end date is less then now
+                if (rental.getStartDate().getTime() > currentDate.getTime())
+                    rental.setStatus(RentalStatus.panding);
+                if (rental.getEndDate().getTime() < currentDate.getTime())
+                    rental.setStatus(RentalStatus.done);
+                if (rental.getStartDate().getTime() < currentDate.getTime() && rental.getEndDate().getTime() > currentDate.getTime())
+                    rental.setStatus(RentalStatus.inRent);
                 rentals.add(rental);
+            }
         }
         lstRentals = view.findViewById(R.id.lvRentals);
         totalRevenues = view.findViewById(R.id.tvTotalRevenues);
         totalExpeness = view.findViewById(R.id.tvTotalExpenses);
-        totalRevenues.setText("Revenues: " + String.valueOf(model.getTotalRevenues()) + "₪");
-        totalExpeness.setText("Expenses: " + String.valueOf(model.getTotalExpenses()) + "₪");
-        btnBack = view.findViewById(R.id.btnBack);
+        totalRevenues.setText("Revenues: " + String.valueOf(model.getTotalRevenues()).replace(".0", "") + "₪");
+        totalExpeness.setText("Expenses: " + String.valueOf(model.getTotalExpenses()).replace(".0", "") + "₪");
         Collections.sort(rentals, Comparator.comparingLong(Rental::getDateInLong));
 
-        filterRentalsArrayAdapter = new ArrayAdapter<Rental>(getActivity(), R.layout.item_rental,rentals){
+
+        filterRentalsArrayAdapter = new ArrayAdapter<Rental>(getActivity(), R.layout.item_rental, rentals) {
             @Override
             public View getView(int position, @Nullable View convertView, ViewGroup parent) {
-                View view =  getLayoutInflater().inflate(R.layout.item_rental,null);
+                View view = getLayoutInflater().inflate(R.layout.item_rental, null);
                 tvItemDate = view.findViewById(R.id.tvItemDate);
                 tvItemHours = view.findViewById(R.id.tvItemHours);
                 TextView tvItemMoney = view.findViewById(R.id.tvItemMoney);
@@ -66,7 +80,7 @@ public class DashboardFragment extends Fragment {
                 ImageView imStatus = view.findViewById(R.id.ivStatus);
                 Rental rental = getItem(position);
 
-                switch (rental.getStatus()){
+                switch (rental.getStatus()) {
                     case panding:
                         imStatus.setImageResource(R.drawable.ic_panding);
                         break;
@@ -76,27 +90,22 @@ public class DashboardFragment extends Fragment {
                     case done:
                         imStatus.setImageResource(R.drawable.ic_done);
                         break;
-                    case canceled:
-                        imStatus.setImageResource(R.drawable.ic_canceled);
-                        break;
                 }
-                if(rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())){
+                imStatus.setColorFilter(Color.rgb(0, 191, 255));
+                if (rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())) {
                     view.setBackgroundColor(Color.rgb(208, 240, 192));
+                } else {
+                    view.setBackgroundColor(Color.rgb(255, 192, 203));
                 }
-                else
-                {
-                    view.setBackgroundColor(Color.rgb(135,206,235));
-                }
-
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                tvItemMoney.setTextColor(Color.rgb(0, 191, 255));
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                 tvItemDate.setText(formatter.format(rental.getStartDate()));
                 tvItemHours.setText(rental.getTime());
                 tvItemMoney.setText(String.valueOf(rental.getPrice()).replace(".0", "") + "₪");
-                if(rental.getRenterUser().getDocumentId().equals(model.getCurrentUser().getDocumentId()))
+                if (rental.getRenterUser().getDocumentId().equals(model.getCurrentUser().getDocumentId()))
                     tvItemRenterUser.setText(rental.getHolderUser().getName());
                 else
                     tvItemRenterUser.setText(rental.getRenterUser().getName());
-
 
 
                 return view;
@@ -118,12 +127,6 @@ public class DashboardFragment extends Fragment {
         });
         //setFilter();
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), MainActivity.class));
-            }
-        });
         model.registerModelUpdate(new Model.IModelUpdate() {
             @Override
             public void userUpdate() {
@@ -134,6 +137,7 @@ public class DashboardFragment extends Fragment {
             public void stationUpdate() {
 
             }
+
             @Override
             public void rentalUpdate() {
 

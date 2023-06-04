@@ -38,18 +38,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private ArrayAdapter<ChargingStation> chargingStationArrayAdapter;
     private Dialog searchDialog;
     private FrameLayout frameLayout;
+    private Dialog userDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Home charging station rentals");
         setContentView(R.layout.activity_main);
         LinearLayout LinearLayout = findViewById(R.id.linear_layout);
-        AnimationDrawable animationDrawable = (AnimationDrawable)LinearLayout.getBackground();
+        AnimationDrawable animationDrawable = (AnimationDrawable) LinearLayout.getBackground();
         animationDrawable.setEnterFadeDuration(2500);
         animationDrawable.setExitFadeDuration(5000);
         animationDrawable.start();
 
         model.setContext(getApplicationContext());
+        userDialog = new Dialog(this);
+        userDialog.setContentView(R.layout.dialog_user);
+        userDialog.setCanceledOnTouchOutside(true);
+        userDialog.setCancelable(true);
         showUserDialog();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new SearchFragment()).commit();
@@ -61,14 +67,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
+    public void onBackPressed() {
+        if (!userDialog.isShowing()) super.onBackPressed();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_logout:
                 model.signOut();
                 return true;
@@ -77,14 +88,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return super.onOptionsItemSelected(item);
     }
 
-    private void showUserDialog(){
-        if (model.getAuthUser() == null){
-            Dialog userDialog = new Dialog(this);
+    private void showUserDialog() {
+        if (model.getAuthUser() == null) {
+            userDialog = new Dialog(this);
+
             userDialog.setContentView(R.layout.dialog_user);
+            userDialog.setCanceledOnTouchOutside(true);
+            userDialog.setCancelable(true);
 
             userDialog.show();
-            int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
-            int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+            int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.90);
+            int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.90);
 
             userDialog.getWindow().setLayout(width, height);
             Switch aSwitch = userDialog.findViewById(R.id.swtchState);
@@ -102,17 +116,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     etFullName.setVisibility(b ? View.VISIBLE : View.GONE);
                     ivDialogImage.setVisibility(View.VISIBLE);
 
-                    btnSubmit.setText(b? "Create" : "Sign in");
+                    btnSubmit.setText(b ? "Create" : "Sign in");
                 }
             });
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (aSwitch.isChecked()){
+                    if (aSwitch.isChecked()) {
                         model.createUser(etEmail.getText().toString(), etPassword.getText().toString(), etFullName.getText().toString());
-                    }
-                    else
-                    {
+                    } else {
                         model.login(etEmail.getText().toString(), etPassword.getText().toString());
                     }
 
@@ -131,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.navigation_search:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new SearchFragment()).commit();

@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RentalHistoryActivity"
     android:background="@drawable/gradient_animation"
-    android:id="@+id/linear_layout">
+    tools:context=".RentalHistoryActivity">
 
 
     <LinearLayout
@@ -20,72 +20,87 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:gravity="center"
-            android:text="Rental History"
+            android:text="Rental Details"
+            android:textColor="#0000CD"
             android:textSize="50dp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivStatus"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_gravity="center"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_margin="15dp"
+            android:layout_marginBottom="10dp"
             app:srcCompat="@drawable/ic_panding" />
 
-        <TextView
-            android:id="@+id/tvRenterName"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="25dp"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="Renter Name"
-            android:textSize="25sp"
-            android:textStyle="normal" />
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/backgroud_details">
 
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="Time"
-            android:textSize="25sp"
-            android:layout_marginBottom="25dp"
-            android:textStyle="normal" />
+            <TextView
+                android:id="@+id/tvRenterName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="25dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:text="Renter Name"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:textStyle="normal" />
 
-        <TextView
-            android:id="@+id/tvStationAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="Station Address"
-            android:textSize="25sp"
-            android:layout_marginBottom="25dp"
-            android:textStyle="normal" />
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:text="Time"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="normal" />
 
-        <TextView
-            android:id="@+id/tvPricePerHour"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="Price Per Hour"
-            android:textSize="25sp"
-            android:layout_marginBottom="25dp"
-            android:textStyle="normal" />
+            <TextView
+                android:id="@+id/tvStationAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:text="Station Address"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/tvPricePerHour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:text="Price Per Hour"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="normal" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/tvTotalPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:layout_weight="0"
             android:gravity="center"
+            android:textColor="#8A2BE2"
             android:text="Total Price"
-            android:textSize="35sp"
-            android:layout_marginBottom="25dp"
+            android:textSize="45sp"
             android:textStyle="bold" />
 
     </LinearLayout>

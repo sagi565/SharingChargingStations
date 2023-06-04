@@ -29,7 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.function.Predicate;
 
 public class ScheduleActivity extends AppCompatActivity {
     private static final String TAG = "ScheduleActivity";
@@ -55,7 +54,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
         selectedYear = calendar.get(Calendar.YEAR);
-        selectedMonth = calendar.get(Calendar.MONTH) + 1;
+        selectedMonth = calendar.get(Calendar.MONTH);
         selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
         LinearLayout LinearLayout = findViewById(R.id.linear_layout);
         AnimationDrawable animationDrawable = (AnimationDrawable)LinearLayout.getBackground();
@@ -77,15 +76,14 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         });
         lvHours = findViewById(R.id.lvHours);
-        chargingStation = Model.getInstance().getChargingStations().get(pos);
         simpleCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                selectedYear = year;
+                selectedYear = year + 1900;
                 selectedMonth = month;
                 selectedDay = dayOfMonth;
 
-                setHoursList(year,month + 1, dayOfMonth);
+                setHoursList(year,month, dayOfMonth);
                 lvHours.setAdapter(hoursArrayAdapter);
 
             }
@@ -130,7 +128,7 @@ public class ScheduleActivity extends AppCompatActivity {
         Date date = new Date();
 
         date.setTime(date.getTime());
-        setHoursList(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
+        setHoursList(date.getYear() + 1900, date.getMonth(), date.getDate());
 
     }
 
@@ -152,32 +150,23 @@ public class ScheduleActivity extends AppCompatActivity {
         final int dateYear = year - 1900; //Java date year is since 1900 (2023 is 123)
         final int dateMonth = year - 1900; //Java date year is since 1900 (2023 is 123)
         hours.clear();
-        Rental rental;
         for (int i = (int) chargingStation.getMinHour(); i < (int) chargingStation.getEndHour(); i++) {
-            final int hour = i;
-            rental = model.getRentals().stream()
-                    .filter(new Predicate<Rental>() {
-                        @Override
-                        public boolean test(Rental r) {
-                            return r.getStartDate().getYear() == year &&
-                                    r.getStartDate().getMonth() == month &&
-                                    r.getStartDate().getDate() == day &&
-                                    r.getStartDate().getHours()== hour &&
-                                    r.getHolderUser().getMyChargingStation() == chargingStation;
-                        }
-                    })
-                    .findAny()
-                    .orElse(null);
+            boolean isOccupied = false;
+            for(Rental rental : model.getRentals()){
+                if(rental.getStartDate().getYear() + 1900 == year &&
+                        rental.getStartDate().getMonth() == month &&
+                        rental.getStartDate().getDate() == day &&
+                        rental.getStartDate().getHours() == i &&
+                        rental.getChargingStation().toString().equals(chargingStation.toString()))
+                    isOccupied = true;
+            }
+
             String s = String.format("%02d", i) + ":00 - " + (i+1) + ":00";
 
-            String tmp = rental == null ? "" : "Occupied";
-            if(rental == null)
+            if(isOccupied == false)
                 hours.add(new OrderHour(s, HourStatus.free));
             else
                 hours.add(new OrderHour(s, HourStatus.occupied));
-
-            //            Toast.makeText(getApplicationContext(),"year: " + year + ", month: " + month + ", day: " + day,Toast.LENGTH_SHORT).show();
-
         }
         hoursArrayAdapter.notifyDataSetChanged();
     }

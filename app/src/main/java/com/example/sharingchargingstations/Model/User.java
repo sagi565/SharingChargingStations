@@ -6,6 +6,7 @@ public class User {
     private String documentId;
     private String name;
     private ChargingStation myChargingStation;
+    private String profileImage;
 
     public User(String name, ChargingStation myChargingStation) {
         this.name = name;
@@ -42,4 +43,11 @@ public class User {
         this.documentId = documentId;
     }
 
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 }

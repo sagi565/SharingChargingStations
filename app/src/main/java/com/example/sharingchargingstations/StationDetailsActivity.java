@@ -25,7 +25,6 @@ public class StationDetailsActivity extends AppCompatActivity {
     private TextView tvDescription;
 
     private Button btnRent;
-    private Button btnBack;
 
     private Model model = Model.getInstance();
     private ChargingStation chargingStation;
@@ -52,30 +51,26 @@ public class StationDetailsActivity extends AppCompatActivity {
         animationDrawable.start();
 
         btnRent = findViewById(R.id.btnRent);
-        btnBack = findViewById(R.id.btnBack);
+
 
         Bundle extras = getIntent().getExtras();
         pos = extras.getInt("pos");
         chargingStation = Model.getInstance().getChargingStations().get(pos);
         user = chargingStation.getUser();
 
-        tvRenterName.setText("Renter Name: " + user.getName());
-        tvPricePerHour.setText("Price Per Hour: " + String.valueOf(chargingStation.getPricePerHour()));
-        tvAvailableHour.setText("Available Hours: " + chargingStation.getTime());
-        tvStationAddress.setText("Station Address: " + chargingStation.getStationAddress().toString());
-        tvTypeOfChargingStation.setText("Type Of Charging Station: " + chargingStation.getType().toString());
-        tvChargingSpeed.setText("Charging Speed: " + String.valueOf(chargingStation.getChargingSpeed()) + " Kilowatt-hour");
-        tvDescription.setText("Description: " + chargingStation.getDescription());
+        tvRenterName.setText(user.getName());
+        tvPricePerHour.setText(String.valueOf(chargingStation.getPricePerHour()).replace(".0", "") + "₪");
+        tvAvailableHour.setText(chargingStation.getTime());
+        tvStationAddress.setText(chargingStation.getStationAddress().toString());
+        tvTypeOfChargingStation.setText(chargingStation.getType().toString());
+        tvChargingSpeed.setText(String.valueOf(chargingStation.getChargingSpeed()) + " Kilowatt-hour");
+        tvDescription.setText(chargingStation.getDescription());
 
         btnRent.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), ScheduleActivity.class);
                 i.putExtra("pos", pos);
                 startActivity(i);
-            }
-        });
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
                 finish();
             }
         });

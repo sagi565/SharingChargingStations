@@ -1,5 +1,8 @@
 package com.example.sharingchargingstations.Model;
+
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,29 +20,35 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class Model {
 
     //region ModelUpdate
     public interface IModelUpdate {
-    public void userUpdate();
-    public void stationUpdate();
-    public void rentalUpdate();
+        public void userUpdate();
 
-}
+        public void stationUpdate();
 
-    private  ArrayList<IModelUpdate> iModelUpdates = new ArrayList<>();
+        public void rentalUpdate();
+
+    }
+
+    private ArrayList<IModelUpdate> iModelUpdates = new ArrayList<>();
 
     public void registerModelUpdate(IModelUpdate iModelUpdate) {
         this.iModelUpdates.add(iModelUpdate);
     }
 
-    public void unRegisterModelUpdate(IModelUpdate iModelUpdate){
+    public void unRegisterModelUpdate(IModelUpdate iModelUpdate) {
         if (iModelUpdates.contains(iModelUpdate)) iModelUpdates.remove(iModelUpdate);
     }
     //endregion
@@ -47,8 +56,18 @@ public class Model {
     //region Properties, Constructor, Getters and Setters
 
     private Model() {
-        if (mAuth.getCurrentUser() != null && currentUser == null) currentUser = new User(mAuth.getCurrentUser());
+
         registerDBRef();
+    }
+
+    private void setCurrentUser(){
+        if (currentUser == null) {
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getDocumentId().equals(mAuth.getUid())) {
+                    currentUser = users.get(i);
+                }
+            }
+        }
     }
 
     private static Model instance;
@@ -62,16 +81,23 @@ public class Model {
     public ArrayList<User> getUsers() {
         return users;
     }
+
     public ArrayList<ChargingStation> getChargingStations() {
         return chargingStations;
     }
-    public ArrayList<Rental> getRentals() { return rentals; }
+
+    public ArrayList<Rental> getRentals() {
+        return rentals;
+    }
+
     public User getCurrentUser() {
         return currentUser;
     }
-    public void setContext(Context context){
+
+    public void setContext(Context context) {
         this.context = context;
     }
+
     public static Model getInstance() {
         if (instance == null)
             instance = new Model();
@@ -84,6 +110,7 @@ public class Model {
     //region FireBase
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference("UserImages");
     private CollectionReference usersRef;
     private CollectionReference stationsRef;
     private CollectionReference rentalsRef;
@@ -108,11 +135,11 @@ public class Model {
             rentalsRef = null;
             stationsRef = null;
             userRef = null;
-            if(userListenerRegistration != null)
+            if (userListenerRegistration != null)
                 userListenerRegistration.remove();
-            if(stationsListenerRegistration != null)
+            if (stationsListenerRegistration != null)
                 stationsListenerRegistration.remove();
-            if(rentalsListenerRegistration != null)
+            if (rentalsListenerRegistration != null)
                 rentalsListenerRegistration.remove();
         }
     }
@@ -122,7 +149,7 @@ public class Model {
     public double getTotalRevenues() {
         double totalRevenues = 0;
         for (Rental rental : rentals) {
-            if(rental.getHolderUser().getDocumentId().equals(currentUser.getDocumentId()))
+            if (rental.getHolderUser().getDocumentId().equals(currentUser.getDocumentId()))
                 totalRevenues += rental.getPrice();
         }
         return totalRevenues;
@@ -131,7 +158,7 @@ public class Model {
     public double getTotalExpenses() {
         double totalExpenses = 0;
         for (Rental rental : rentals) {
-            if(rental.getRenterUser().getDocumentId().equals(currentUser.getDocumentId()))
+            if (rental.getRenterUser().getDocumentId().equals(currentUser.getDocumentId()))
                 totalExpenses += rental.getPrice();
         }
         return totalExpenses;
@@ -154,7 +181,7 @@ public class Model {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: login " + e.getMessage() );
+                        Log.e(TAG, "onFailure: login " + e.getMessage());
                         Toast.makeText(context, "sign in failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         raiseUserUpdate();
                     }
@@ -202,7 +229,7 @@ public class Model {
     }
 
     private void raiseUserUpdate() {
-        for(IModelUpdate iModelUpdate : iModelUpdates){
+        for (IModelUpdate iModelUpdate : iModelUpdates) {
             iModelUpdate.userUpdate();
         }
     }
@@ -226,8 +253,8 @@ public class Model {
         userListenerRegistration = usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null){
-                    Log.e(TAG, "onEvent: users changed " + error.getMessage() );
+                if (error != null) {
+                    Log.e(TAG, "onEvent: users changed " + error.getMessage());
                     return;
                 }
                 User user = null;
@@ -235,8 +262,8 @@ public class Model {
                     user = documentChange.getDocument().toObject(User.class);
                     switch (documentChange.getType()) {
                         case ADDED:
-
                             user.setDocumentId(documentChange.getDocument().getId());
+                            //user.setProfileImage(storageReference.child(currentUser.getDocumentId()+".jpg"));
                             users.add(user);
                             break;
                         case MODIFIED:
@@ -246,13 +273,17 @@ public class Model {
                                     .findAny()
                                     .orElse(null);
                             if (user1 != null) {
-                                //update user fields
+                                user1.setProfileImage(user.getProfileImage());
+                                user1.setMyChargingStation(user.getMyChargingStation());
+                                user1.setName(user.getName());
+                                user1.setDocumentId(user1.getDocumentId());
                             }
                         case REMOVED:
                             users.remove(user);
                             break;
                     }
                 }
+                setCurrentUser();
                 raiseUserUpdate();
             }
         });
@@ -293,7 +324,8 @@ public class Model {
                         case ADDED:
                             station.setDocumentId(documentChange.getDocument().getId());
                             chargingStations.add(station);
-                            if (station.getUser().getDocumentId().equals(getAuthUser().getUid())) getCurrentUser().setMyChargingStation(station);
+                            if (station.getUser().getDocumentId().equals(getAuthUser().getUid()))
+                                getCurrentUser().setMyChargingStation(station);
                             break;
                         case MODIFIED:
                             String docId = documentChange.getDocument().getId();
@@ -319,7 +351,7 @@ public class Model {
         });
     }
 
-    public void updateChargingStation(ChargingStation chargingStation){
+    public void updateChargingStation(ChargingStation chargingStation) {
         stationsRef.document(chargingStation.getDocumentId()).set(chargingStation)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -336,7 +368,7 @@ public class Model {
     }
 
     private void raiseStationUpdate() {
-        for(IModelUpdate iModelUpdate : iModelUpdates){
+        for (IModelUpdate iModelUpdate : iModelUpdates) {
             iModelUpdate.stationUpdate();
         }
     }
@@ -346,7 +378,7 @@ public class Model {
     //region Rentals
     private ListenerRegistration rentalsListenerRegistration;
 
-    public void updateRental(Rental rental){
+    public void updateRental(Rental rental) {
         rentalsRef.document(rental.getDocumentId()).set(rental)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -415,10 +447,62 @@ public class Model {
     }
 
     private void raiseRentalUpdate() {
-        for(IModelUpdate iModelUpdate : iModelUpdates){
+        for (IModelUpdate iModelUpdate : iModelUpdates) {
             iModelUpdate.rentalUpdate();
         }
     }
     //endregion
+
+    //region Image
+    public void uploadUserImage(Bitmap image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        StorageReference imageRef = storageReference.child(currentUser.getDocumentId()+".jpg");
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        currentUser.setProfileImage(uri.toString());
+                        updateUser(currentUser);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: upload image");
+            }
+        });
+
+    }
+
+//    public void getImage(ImageView imageView){
+//        final long ONE_MEGABYTE = 1024 * 1024;
+//        StorageReference userImages = storage.getReference("usersImages");
+//        userImages.child("1").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                imageView.setImageURI(uri);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+
+
+//endregion
+
 
 }

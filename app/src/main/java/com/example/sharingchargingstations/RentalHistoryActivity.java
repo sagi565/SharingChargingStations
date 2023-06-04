@@ -61,31 +61,19 @@ public class RentalHistoryActivity extends AppCompatActivity {
             case done:
                 ivStatus.setImageResource(R.drawable.ic_done);
                 break;
-            case canceled:
-                ivStatus.setImageResource(R.drawable.ic_canceled);
-                break;
         }
+        ivStatus.setColorFilter(Color.rgb(0,0,139));
+
         tvStationAddress.setText(rental.getChargingStation().getStationAddress().toString());
         tvPricePerHour.setText("Price Per Hour: " + String.valueOf(rental.getChargingStation().getPricePerHour()).replace(".0", "") + "₪");
 
         tvTotalPrice.setText("Total Price: " + String.valueOf(rental.getPrice()).replace(".0", "") + "₪");
 
-        tvTime.setBackgroundColor(Color.rgb(255,69,0));
-        tvPeopleName.setBackgroundColor(Color.rgb(250,128,114));
-        tvStationAddress.setBackgroundColor(Color.rgb(250,128,114));
-        tvPricePerHour.setBackgroundColor(Color.rgb(255,69,0));
-
-        tvTotalPrice.setTextColor(Color.rgb(220,20,60));
-        tvTitle.setTextColor(Color.rgb(220,20,60));
-
-
-
-
-        if(rental.getHolderUser() == model.getCurrentUser()){
-            tvPeopleName.setText("Owner: You  |  Renter: " + rental.getRenterUser().getName());
+        if(rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())){
+            tvPeopleName.setText("Renter: " + rental.getRenterUser().getName());
         }
         else{
-            tvPeopleName.setText("Owner: " + model.getCurrentUser().getName() + "  |  Renter: You");
+            tvPeopleName.setText("Owner: " + rental.getHolderUser().getName());
         }
     }
 }

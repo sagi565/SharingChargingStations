@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <ImageView
             android:id="@+id/ivProfile"
@@ -17,6 +18,16 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             app:srcCompat="@drawable/ic_profile" />
+        <Button
+            android:id="@+id/btnSelectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="#00A6FF"
+            android:text="SELECT IMAGE"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textView"
@@ -30,18 +41,16 @@
             android:textStyle="bold" />
 
 
-
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:ems="10"
             android:gravity="center"
             android:hint="Name"
             android:inputType="text"
-            android:layout_marginBottom="20dp"
             android:textSize="25sp" />
-
 
 
         <TextView
@@ -102,12 +111,13 @@
             android:textColor="#00A6FF"
             android:textSize="25sp"
             android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="95dp"
-            android:orientation="horizontal"
             android:layout_margin="3dp"
-            android:background="@drawable/customborder">
+            android:background="@drawable/customborder"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/llChargingStation"
@@ -122,6 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:layout_gravity="center"
                     android:text="15sp"
                     android:textSize="23sp"
                     android:textStyle="bold" />
@@ -175,32 +186,6 @@
                 app:srcCompat="@drawable/ic_trash" />
 
         </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnBack"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Back"
-                android:textSize="30sp" />
-
-            <Button
-                android:id="@+id/btnSignOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="sign out"
-                android:textSize="30sp" />
-        </LinearLayout>
-
 
     </LinearLayout>
 </LinearLayout>
