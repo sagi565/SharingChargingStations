@@ -1,6 +1,8 @@
 package com.example.sharingchargingstations;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.ChargingStationStatus;
 import com.example.sharingchargingstations.Model.Model;
+import com.example.sharingchargingstations.Model.Rental;
 import com.example.sharingchargingstations.Model.TypeChargingStation;
 import com.example.sharingchargingstations.Model.User;
 import com.squareup.picasso.Picasso;
@@ -102,12 +105,44 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
         btnDeleteChargingStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvItemType.setVisibility(View.GONE);
-                tvItemAddress.setVisibility(View.GONE);
-                tvItemHours.setText("Add Charging Station");
-                btnDeleteChargingStation.setColorFilter(Color.rgb(50,50,50));
-                tvItemPricePerHour.setVisibility(View.GONE);
-                model.getCurrentUser().getMyChargingStation().setStatus(ChargingStationStatus.canceled);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("Delete Charging Station");
+                builder.setMessage("Are you sure? " +
+                        "\n This will cancel all future rentals of the people renting from you");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        tvItemType.setVisibility(View.GONE);
+                        tvItemAddress.setVisibility(View.GONE);
+                        tvItemHours.setText("Add Charging Station");
+                        btnDeleteChargingStation.setColorFilter(Color.rgb(50,50,50));
+                        tvItemPricePerHour.setVisibility(View.GONE);
+                        model.getCurrentUser().getMyChargingStation().setStatus(ChargingStationStatus.canceled);
+                        for( int i = 0; i < model.getRentals().size(); i++ ) {
+                            Rental removedRental = model.getRentals().get( i );
+                            if(removedRental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())){
+                                model.getRentals().remove(removedRental);
+                                i--;
+
+                            }
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
