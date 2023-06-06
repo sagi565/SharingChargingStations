@@ -150,6 +150,7 @@ public class AddChargingStationActivity extends AppCompatActivity {
                         TypeChargingStation.valueOf(sType.getSelectedItem().toString()),
                         Double.valueOf(etChargingSpeed.getText().toString()),
                         etDescription.getText().toString());
+                c.setStatus(ChargingStationStatus.active);
                 model.addChargingStation(c);
             }
             else {
@@ -163,6 +164,7 @@ public class AddChargingStationActivity extends AppCompatActivity {
                 c.setType(TypeChargingStation.valueOf(sType.getSelectedItem().toString()));
                 c.setChargingSpeed(Double.valueOf(etChargingSpeed.getText().toString()));
                 c.setDescription(etDescription.getText().toString());
+                c.setStatus(ChargingStationStatus.active);
                 model.updateChargingStation(c);
                 model.getCurrentUser().setMyChargingStation(c);
             }

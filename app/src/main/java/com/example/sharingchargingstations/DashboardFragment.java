@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.sharingchargingstations.Model.ChargingStationStatus;
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
 import com.example.sharingchargingstations.Model.RentalStatus;
@@ -46,19 +47,21 @@ public class DashboardFragment extends Fragment {
         currentDate.setTime(currentDate.getTime() + 1000*60*60*3);
 
         for (Rental rental : model.getRentals()) {
-            // Get the rentals of the current user
-            if (rental.getRenterUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())
-                    || rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())) {
-                //pending if start date bigger then now
-                //inrent if end date bigger then now
-                //done if end date is less then now
-                if (rental.getStartDate().getTime() > currentDate.getTime())
-                    rental.setStatus(RentalStatus.panding);
-                if (rental.getEndDate().getTime() < currentDate.getTime())
-                    rental.setStatus(RentalStatus.done);
-                if (rental.getStartDate().getTime() < currentDate.getTime() && rental.getEndDate().getTime() > currentDate.getTime())
-                    rental.setStatus(RentalStatus.inRent);
-                rentals.add(rental);
+            if(rental.getChargingStation().getStatus() == ChargingStationStatus.active){
+                // Get the rentals of the current user
+                if (rental.getRenterUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())
+                        || rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())) {
+                    //pending if start date bigger then now
+                    //inrent if end date bigger then now
+                    //done if end date is less then now
+                    if (rental.getStartDate().getTime() > currentDate.getTime())
+                        rental.setStatus(RentalStatus.panding);
+                    if (rental.getEndDate().getTime() < currentDate.getTime())
+                        rental.setStatus(RentalStatus.done);
+                    if (rental.getStartDate().getTime() < currentDate.getTime() && rental.getEndDate().getTime() > currentDate.getTime())
+                        rental.setStatus(RentalStatus.inRent);
+                    rentals.add(rental);
+                }
             }
         }
         lstRentals = view.findViewById(R.id.lvRentals);

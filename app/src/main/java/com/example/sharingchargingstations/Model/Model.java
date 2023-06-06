@@ -56,7 +56,6 @@ public class Model {
     //region Properties, Constructor, Getters and Setters
 
     private Model() {
-
         registerDBRef();
     }
 
@@ -173,6 +172,10 @@ public class Model {
                     public void onSuccess(AuthResult authResult) {
                         //set user
                         currentUser = new User(getAuthUser());
+                        for(ChargingStation c : chargingStations)
+                            if(c.getUser().getDocumentId().equals(currentUser.getDocumentId()))
+                                currentUser.setMyChargingStation(c);
+
                         raiseUserUpdate();
                         raiseStationUpdate();
                         raiseRentalUpdate();
@@ -202,6 +205,7 @@ public class Model {
                         User user = new User(displayName, null);
                         user.setDocumentId(getAuthUser().getUid());
                         addUser(user);
+                        //currentUser = user;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -263,7 +267,6 @@ public class Model {
                     switch (documentChange.getType()) {
                         case ADDED:
                             user.setDocumentId(documentChange.getDocument().getId());
-                            //user.setProfileImage(storageReference.child(currentUser.getDocumentId()+".jpg"));
                             users.add(user);
                             break;
                         case MODIFIED:
@@ -485,23 +488,6 @@ public class Model {
         });
 
     }
-
-//    public void getImage(ImageView imageView){
-//        final long ONE_MEGABYTE = 1024 * 1024;
-//        StorageReference userImages = storage.getReference("usersImages");
-//        userImages.child("1").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                imageView.setImageURI(uri);
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-
-
 //endregion
 
 

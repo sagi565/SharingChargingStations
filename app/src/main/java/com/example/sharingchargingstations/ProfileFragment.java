@@ -120,6 +120,7 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
                         btnDeleteChargingStation.setColorFilter(Color.rgb(50,50,50));
                         tvItemPricePerHour.setVisibility(View.GONE);
                         model.getCurrentUser().getMyChargingStation().setStatus(ChargingStationStatus.canceled);
+                        model.updateChargingStation(model.getCurrentUser().getMyChargingStation());
                         for( int i = 0; i < model.getRentals().size(); i++ ) {
                             Rental removedRental = model.getRentals().get( i );
                             if(removedRental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())){
@@ -172,18 +173,11 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
 
         return view;
     }
-    // this function is triggered when
-    // the Select Image Button is clicked
     void imageChooser() {
-
-        // create an instance of the
-        // intent of the type image
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
 
-        // pass the constant to compare it
-        // with the returned requestCode
         startActivityForResult(Intent.createChooser(i, "Select Picture"), 6 );
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -191,10 +185,8 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
 
         if (requestCode == 6) {
 
-            // Get the url of the image from data
             Uri selectedImageUri = data.getData();
             if (null != selectedImageUri) {
-                // update the preview image in the layout
                 ivProfile.setImageURI(selectedImageUri);
                 try {
                     model.uploadUserImage(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri));
@@ -213,8 +205,6 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
         }
     }
 
-    // this function is triggered when user
-    // selects the image from the imageChooser
     private void updateUiFields(){
         tvItemType.setText(chargingStation.getType().toString());
         if(chargingStation.getType() == TypeChargingStation.CHAdeMO)
@@ -224,6 +214,10 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
 
         tvItemAddress.setText(chargingStation.getStationAddress().toString());
         tvItemHours.setText(chargingStation.getTime());
+        if(chargingStation.getStatus() == ChargingStationStatus.canceled)
+            tvItemHours.setText("Add Charging Station");
+
+
         tvItemPricePerHour.setText(String.valueOf(chargingStation.getPricePerHour()).replace(".0", "") + "₪");
         btnDeleteChargingStation.setColorFilter(Color.rgb(0,0,0));
         btnDeleteChargingStation.setEnabled(true);
@@ -232,7 +226,7 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
         etHouseNumber.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getHouseNumber());
         if(currentUser.getProfileImage() != null)
             Picasso.get().load(currentUser.getProfileImage()).into(ivProfile);
-        //ivProfile.setImageURI(Uri.parse(currentUser.getProfileImage()));
+
 
     }
     public void EnableRuntimePermission(){
@@ -266,7 +260,7 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
 
     @Override
     public void userUpdate() {
-
+        updateUiFields();
     }
 
     @Override

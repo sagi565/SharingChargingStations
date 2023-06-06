@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             EditText etFullName = userDialog.findViewById(R.id.etDialogFullName);
             EditText etEmail = userDialog.findViewById(R.id.etDialogEmail);
             ImageView ivDialogImage = userDialog.findViewById(R.id.ivDialogImage);
+            TextView tvTitle = userDialog.findViewById(R.id.tvTitle);
+
 
             EditText etPassword = userDialog.findViewById(R.id.etDialogPassword);
             etFullName.setVisibility(View.GONE);
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     etFullName.setVisibility(b ? View.VISIBLE : View.GONE);
                     ivDialogImage.setVisibility(View.VISIBLE);
 
-                    btnSubmit.setText(b ? "Create" : "Sign in");
+                    tvTitle.setText(b ? "Create" : "Sign in");
                 }
             });
             btnSubmit.setOnClickListener(new View.OnClickListener() {
