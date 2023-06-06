@@ -148,7 +148,7 @@ public class Model {
     public double getTotalRevenues() {
         double totalRevenues = 0;
         for (Rental rental : rentals) {
-            if (rental.getHolderUser().getDocumentId().equals(currentUser.getDocumentId()))
+            if (rental.getHolderUser().getDocumentId().equals(currentUser.getDocumentId()) && rental.getStatus() != RentalStatus.cancelled)
                 totalRevenues += rental.getPrice();
         }
         return totalRevenues;
@@ -157,7 +157,7 @@ public class Model {
     public double getTotalExpenses() {
         double totalExpenses = 0;
         for (Rental rental : rentals) {
-            if (rental.getRenterUser().getDocumentId().equals(currentUser.getDocumentId()))
+            if (rental.getRenterUser().getDocumentId().equals(currentUser.getDocumentId()) && rental.getStatus() != RentalStatus.cancelled)
                 totalExpenses += rental.getPrice();
         }
         return totalExpenses;
@@ -172,10 +172,12 @@ public class Model {
                     public void onSuccess(AuthResult authResult) {
                         //set user
                         currentUser = new User(getAuthUser());
-                        for(ChargingStation c : chargingStations)
-                            if(c.getUser().getDocumentId().equals(currentUser.getDocumentId()))
+                        for(ChargingStation c : chargingStations){
+                            if(c.getUser().getDocumentId().equals(currentUser.getDocumentId())){
                                 currentUser.setMyChargingStation(c);
-
+                            }
+                        }
+                        setCurrentUser();
                         raiseUserUpdate();
                         raiseStationUpdate();
                         raiseRentalUpdate();
@@ -189,7 +191,6 @@ public class Model {
                         raiseUserUpdate();
                     }
                 });
-
     }
 
     public void createUser(String email, String password, String displayName) {
@@ -380,7 +381,6 @@ public class Model {
 
     //region Rentals
     private ListenerRegistration rentalsListenerRegistration;
-
     public void updateRental(Rental rental) {
         rentalsRef.document(rental.getDocumentId()).set(rental)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

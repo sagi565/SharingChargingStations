@@ -27,6 +27,7 @@ import com.example.sharingchargingstations.Model.ChargingStation;
 import com.example.sharingchargingstations.Model.ChargingStationStatus;
 import com.example.sharingchargingstations.Model.Model;
 import com.example.sharingchargingstations.Model.Rental;
+import com.example.sharingchargingstations.Model.RentalStatus;
 import com.example.sharingchargingstations.Model.TypeChargingStation;
 import com.example.sharingchargingstations.Model.User;
 import com.squareup.picasso.Picasso;
@@ -38,7 +39,6 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
     private EditText etCity;
     private EditText etStreet;
     private EditText etHouseNumber;
-    private TextView tvMyChargingStation;
     private ImageView btnDeleteChargingStation;
     private ImageView ivProfile;
     private TextView tvItemAddress;
@@ -120,15 +120,19 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
                         btnDeleteChargingStation.setColorFilter(Color.rgb(50,50,50));
                         tvItemPricePerHour.setVisibility(View.GONE);
                         model.getCurrentUser().getMyChargingStation().setStatus(ChargingStationStatus.canceled);
-                        model.updateChargingStation(model.getCurrentUser().getMyChargingStation());
+                        //chargingStation.setStatus(ChargingStationStatus.canceled);
+                        model.updateChargingStation(chargingStation);
                         for( int i = 0; i < model.getRentals().size(); i++ ) {
                             Rental removedRental = model.getRentals().get( i );
                             if(removedRental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())){
+                                removedRental.getChargingStation().setStatus(ChargingStationStatus.canceled);
+                                removedRental.setStatus(RentalStatus.cancelled);
+                                model.updateRental(removedRental);
                                 model.getRentals().remove(removedRental);
                                 i--;
-
                             }
                         }
+
                         dialog.dismiss();
                     }
                 });
@@ -167,35 +171,42 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
                 startActivityForResult(i,1);
             }
         });
-
-
         model.registerModelUpdate(this);
 
         return view;
     }
+    // this function is triggered when
+    // the Select Image Button is clicked
     void imageChooser() {
+
+        // create an instance of the
+        // intent of the type image
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
 
+        // pass the constant to compare it
+        // with the returned requestCode
         startActivityForResult(Intent.createChooser(i, "Select Picture"), 6 );
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        if(chargingStation != null && chargingStation.getStatus() == ChargingStationStatus.active){
+            updateUiFields();
+        }
         if (requestCode == 6) {
 
+            // Get the url of the image from data
             Uri selectedImageUri = data.getData();
             if (null != selectedImageUri) {
+                // update the preview image in the layout
                 ivProfile.setImageURI(selectedImageUri);
                 try {
                     model.uploadUserImage(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
-
         }
         if (requestCode == 7) {
             Bundle extras = data.getExtras();
@@ -205,18 +216,25 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
         }
     }
 
+    // this function is triggered when user
+    // selects the image from the imageChooser
     private void updateUiFields(){
         tvItemType.setText(chargingStation.getType().toString());
         if(chargingStation.getType() == TypeChargingStation.CHAdeMO)
             tvItemType.setTextSize(13);
         else
             tvItemType.setTextSize(20);
-
         tvItemAddress.setText(chargingStation.getStationAddress().toString());
-        tvItemHours.setText(chargingStation.getTime());
-        if(chargingStation.getStatus() == ChargingStationStatus.canceled)
-            tvItemHours.setText("Add Charging Station");
 
+        if(chargingStation.getStatus() == ChargingStationStatus.active)
+            tvItemHours.setText(chargingStation.getTime());
+        else
+            tvItemHours.setText("Add Charging Station");
+        //tvItemHours.setText(chargingStation.getTime());
+
+        tvItemType.setVisibility(View.VISIBLE);
+        tvItemAddress.setVisibility(View.VISIBLE);
+        tvItemPricePerHour.setVisibility(View.VISIBLE);
 
         tvItemPricePerHour.setText(String.valueOf(chargingStation.getPricePerHour()).replace(".0", "") + "₪");
         btnDeleteChargingStation.setColorFilter(Color.rgb(0,0,0));
@@ -226,7 +244,7 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
         etHouseNumber.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getHouseNumber());
         if(currentUser.getProfileImage() != null)
             Picasso.get().load(currentUser.getProfileImage()).into(ivProfile);
-
+        //ivProfile.setImageURI(Uri.parse(currentUser.getProfileImage()));
 
     }
     public void EnableRuntimePermission(){
@@ -260,12 +278,12 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
 
     @Override
     public void userUpdate() {
-        updateUiFields();
+
     }
 
     @Override
     public void stationUpdate() {
-        updateUiFields();
+        //updateUiFields();
     }
     @Override
     public void rentalUpdate() {

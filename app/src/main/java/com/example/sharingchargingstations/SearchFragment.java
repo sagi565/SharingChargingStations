@@ -58,6 +58,7 @@ public class SearchFragment extends Fragment {
             tvTitle.setText("Hello " + model.getCurrentUser().getName());
 
 
+
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -257,7 +258,8 @@ public class SearchFragment extends Fragment {
     }
     public void setFilter(String filter){
         filterChargingStations.clear();
-
+        if(model.getCurrentUser() == null)
+            return;
         for(ChargingStation chargingStation : model.getChargingStations()){
             if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())
                     && chargingStation.getStatus() == ChargingStationStatus.active

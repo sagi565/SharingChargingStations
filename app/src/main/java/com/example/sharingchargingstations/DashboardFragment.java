@@ -47,7 +47,7 @@ public class DashboardFragment extends Fragment {
         currentDate.setTime(currentDate.getTime() + 1000*60*60*3);
 
         for (Rental rental : model.getRentals()) {
-            if(rental.getChargingStation().getStatus() == ChargingStationStatus.active){
+            if(rental.getChargingStation().getStatus() == ChargingStationStatus.active && rental.getStatus() != RentalStatus.cancelled){
                 // Get the rentals of the current user
                 if (rental.getRenterUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())
                         || rental.getHolderUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())) {
