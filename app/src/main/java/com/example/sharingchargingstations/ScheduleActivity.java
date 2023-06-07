@@ -120,7 +120,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 }
 
 
-                Toast.makeText(ScheduleActivity.this, "" + hours.get(position).hourStatus, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ScheduleActivity.this, "" + hours.get(position).hourStatus, Toast.LENGTH_SHORT).show();
                 logHours();
                 hoursArrayAdapter.notifyDataSetChanged();
             }
@@ -161,7 +161,7 @@ public class ScheduleActivity extends AppCompatActivity {
                     isOccupied = true;
             }
 
-            String s = String.format("%02d", i) + ":00 - " + (i+1) + ":00";
+            String s = String.format("%02d", i+1) + ":00 - " + String.format("%02d", i) + ":00";
 
             if(isOccupied == false)
                 hours.add(new OrderHour(s, HourStatus.free));
@@ -176,24 +176,25 @@ public class ScheduleActivity extends AppCompatActivity {
         if(selectedHour == -1)
             return;
         Calendar calendar = Calendar.getInstance();
+        if(selectedYear > 3000) {
+            selectedYear -= 1900;
+        }
         Date tmpDate = new Date(selectedYear, selectedMonth, selectedDay, selectedHour, 0);
         Log.w(TAG, "rent: " + tmpDate);
         calendar.set(selectedYear, selectedMonth,selectedDay , selectedHour, 0, 0);
         Date startDate = calendar.getTime();
 
-
         calendar.add(Calendar.HOUR, 1);
         Date endDate = calendar.getTime();
 
         Date currentDate = new Date();
-        currentDate.setTime(currentDate.getTime() + 1000*60*60*3);
+        //currentDate.setTime(currentDate.getTime() + 1000*60*60*3);
         if(endDate.getTime() < currentDate.getTime()){
             Toast.makeText(ScheduleActivity.this, "The date has passed", Toast.LENGTH_LONG).show();
             return;
         }
-
-
             Toast.makeText(ScheduleActivity.this, endDate.toString(), Toast.LENGTH_LONG).show();
+
 
 
         Rental newRental = new Rental(chargingStation, chargingStation.getUser(), model.getCurrentUser(), startDate, endDate);

@@ -74,6 +74,7 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
         llChargingStation = view.findViewById(R.id.llChargingStation);
 
         ivProfile  = view.findViewById(R.id.ivProfile);
+        ivProfile.setImageResource(R.drawable.ic_profile);
         EnableRuntimePermission();
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +100,7 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
         etName.setText(model.getCurrentUser().getName());
 
         if(currentUser.getProfileImage() != null)
-            Picasso.get().load(currentUser.getProfileImage()).into(ivProfile);
-
+            Picasso.get().load(currentUser.getProfileImage()).placeholder(R.drawable.ic_profile).into(ivProfile);
 
         btnDeleteChargingStation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,6 +209,7 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
             }
         }
         if (requestCode == 7) {
+
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ivProfile.setImageBitmap(imageBitmap);
@@ -243,8 +244,7 @@ public class ProfileFragment extends Fragment implements Model.IModelUpdate {
         etStreet.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getStreet());
         etHouseNumber.setText(model.getCurrentUser().getMyChargingStation().getStationAddress().getHouseNumber());
         if(currentUser.getProfileImage() != null)
-            Picasso.get().load(currentUser.getProfileImage()).into(ivProfile);
-        //ivProfile.setImageURI(Uri.parse(currentUser.getProfileImage()));
+            Picasso.get().load(currentUser.getProfileImage()).placeholder(R.drawable.ic_profile).into(ivProfile);
 
     }
     public void EnableRuntimePermission(){

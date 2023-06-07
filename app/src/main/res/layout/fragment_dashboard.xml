@@ -53,7 +53,7 @@
         <ListView
             android:id="@+id/lvRentals"
             android:layout_width="match_parent"
-            android:layout_height="430dp"
+            android:layout_height="550dp"
             android:dividerHeight="10dp"
             android:divider="@android:color/transparent"/>
 

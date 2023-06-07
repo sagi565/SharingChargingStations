@@ -44,7 +44,7 @@ public class DashboardFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         Date currentDate = new Date();
-        currentDate.setTime(currentDate.getTime() + 1000*60*60*3);
+        //currentDate.setTime(currentDate.getTime() + 1000*60*60*3);
 
         for (Rental rental : model.getRentals()) {
             if(rental.getChargingStation().getStatus() == ChargingStationStatus.active && rental.getStatus() != RentalStatus.cancelled){

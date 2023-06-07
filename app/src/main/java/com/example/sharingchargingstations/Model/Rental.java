@@ -14,7 +14,7 @@ public class Rental {
     private Date startDate;
     private Date endDate;
     private ChargingStation chargingStation;
-    private RentalStatus status; //panding, inRent, done, canceled;
+    private RentalStatus status; // panding, inRent, done, canceled;
     public Rental(){}
     public Rental(ChargingStation chargingStation, User holderUser, User renterUser, Date startDate, Date endDate) {
         this.holderUser = holderUser;
@@ -22,8 +22,6 @@ public class Rental {
         this.startDate = startDate;
         this.endDate = endDate;
         this.chargingStation = chargingStation;
-        //long secs = (this.endDate.getTime() - this.startDate.getTime()) / 1000;
-        //double hours = secs / 3600;
         status = RentalStatus.panding;
     }
     public RentalStatus getStatus() {

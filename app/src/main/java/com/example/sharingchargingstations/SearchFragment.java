@@ -111,7 +111,7 @@ public class SearchFragment extends Fragment {
                         ivChargingStation.setColorFilter(Color.rgb(147, 197, 114));
                         break;
                     case "CP":
-                        ivChargingStation.setColorFilter(Color.rgb(135,206,235));
+                        ivChargingStation.setColorFilter(Color.rgb(65,105,225));
                         break;
                     case "CCS2":
                         ivChargingStation.setColorFilter(Color.rgb(240,128,128));

@@ -34,7 +34,7 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Name"
             android:textColor="#00A6FF"
@@ -57,7 +57,7 @@
             android:id="@+id/Address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Address"
             android:textColor="#00A6FF"
@@ -105,6 +105,7 @@
             android:id="@+id/ivChargingStation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:gravity="center"
             android:text="My Charging Station"
@@ -114,7 +115,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="95dp"
+            android:layout_height="120dp"
             android:layout_margin="3dp"
             android:background="@drawable/customborder"
             android:orientation="horizontal">
@@ -122,7 +123,7 @@
             <LinearLayout
                 android:id="@+id/llChargingStation"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="110dp"
                 android:layout_marginBottom="60dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -147,7 +148,7 @@
                         android:id="@+id/tvItemHours"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="2.5"
                         android:gravity="center"
                         android:text="TextView"
                         android:textSize="25sp"
@@ -160,7 +161,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="TextView"
-                        android:textSize="15sp" />
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -171,7 +172,7 @@
                     android:layout_weight="15"
                     android:gravity="center"
                     android:text="PP"
-                    android:textSize="25sp"
+                    android:textSize="35sp"
                     android:textStyle="bold" />
 
 
@@ -183,6 +184,7 @@
                 android:layout_height="75dp"
                 android:layout_weight="4"
                 android:clickable="true"
+                android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_trash" />
 
         </LinearLayout>
