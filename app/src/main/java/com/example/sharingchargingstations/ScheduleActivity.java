@@ -181,9 +181,19 @@ public class ScheduleActivity extends AppCompatActivity {
         calendar.set(selectedYear, selectedMonth,selectedDay , selectedHour, 0, 0);
         Date startDate = calendar.getTime();
 
+
         calendar.add(Calendar.HOUR, 1);
         Date endDate = calendar.getTime();
-        Toast.makeText(ScheduleActivity.this, endDate.toString(), Toast.LENGTH_LONG).show();
+
+        Date currentDate = new Date();
+        currentDate.setTime(currentDate.getTime() + 1000*60*60*3);
+        if(endDate.getTime() < currentDate.getTime()){
+            Toast.makeText(ScheduleActivity.this, "The date has passed", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
+            Toast.makeText(ScheduleActivity.this, endDate.toString(), Toast.LENGTH_LONG).show();
 
 
         Rental newRental = new Rental(chargingStation, chargingStation.getUser(), model.getCurrentUser(), startDate, endDate);

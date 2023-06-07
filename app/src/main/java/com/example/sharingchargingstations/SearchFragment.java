@@ -263,10 +263,10 @@ public class SearchFragment extends Fragment {
         for(ChargingStation chargingStation : model.getChargingStations()){
             if (chargingStation.getStationAddress().toString().toLowerCase().contains(filter.toLowerCase())
                     && chargingStation.getStatus() == ChargingStationStatus.active
-                    && !chargingStation.getUser().getDocumentId().equals(model.getCurrentUser().getDocumentId()))
+                    && !chargingStation.getUser().getDocumentId().equals(model.getCurrentUser().getDocumentId())
+                    && !filterChargingStations.contains(chargingStation))
                 filterChargingStations.add(chargingStation);
             }
-
         chargingStationArrayAdapter.notifyDataSetChanged();
     }
 
